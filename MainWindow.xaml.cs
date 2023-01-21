@@ -26,5 +26,11 @@ namespace BackupSystemTool
             InitializeComponent();
         }
 
+        private void loginButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        
     }
 }
