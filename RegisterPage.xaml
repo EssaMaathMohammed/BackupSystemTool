@@ -1,28 +1,25 @@
-﻿<Window x:Class="BackupSystemTool.MainWindow"
+﻿<Window x:Class="BackupSystemTool.RegisterPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:adorners="http://gu.se/Adorners"
         xmlns:local="clr-namespace:BackupSystemTool"
+        xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="794">
+        Title="RegisterPage" Height="450" Width="800">
     <Grid>
-        
         <StackPanel>
-            <Label Content="Login" 
+            <Label Content="Register" 
                    Style="{StaticResource loginBorderStlye}"/>
 
             <PasswordBox adorners:Watermark.Text="Enter Your Pin Here"
                             x:Name="PINTextBox" 
                             Style="{StaticResource passwordBoxStyle}"/>
 
-            <Button x:Name="loginButton" Content="Login" 
-                        Click="loginButton_Click"
+            <Button x:Name="registerButton" Content="Register" 
+                        Click="registerButton_Click"
                         Style="{StaticResource greenBackgroundButton}"/>
 
         </StackPanel>
-            
     </Grid>
-
 </Window>

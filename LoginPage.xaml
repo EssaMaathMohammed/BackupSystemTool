@@ -1,0 +1,28 @@
+﻿<Window x:Class="BackupSystemTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BackupSystemTool"
+        xmlns:adorners="http://gu.se/Adorners"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        
+        <StackPanel>
+            <Label Content="Login" 
+                   Style="{StaticResource loginBorderStlye}"/>
+
+            <PasswordBox adorners:Watermark.Text="Enter Your Pin Here"
+                            x:Name="PINTextBox" 
+                            Style="{StaticResource passwordBoxStyle}"/>
+
+            <Button x:Name="loginButton" Content="Login" 
+                        Click="loginButton_Click"
+                        Style="{StaticResource greenBackgroundButton}"/>
+
+        </StackPanel>
+            
+    </Grid>
+
+</Window>
