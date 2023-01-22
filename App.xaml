@@ -4,6 +4,78 @@
              xmlns:local="clr-namespace:BackupSystemTool"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <!-- Lable Style Start -->
+        <Style TargetType="Label" x:Key="loginBorderStlye">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,10,0,40"/>
+        </Style>
+        <!-- Lable Style End -->
+
+
+        <!-- button border Style Start -->
+        <Style x:Key="basicButtonBorder" TargetType="Border">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="CornerRadius" Value="25"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        
+         <Style x:Key="greenBackgroundButtonBorder" TargetType="Border" BasedOn="{StaticResource basicButtonBorder}">
+            <Setter Property="Background" Value="#44F09F"/>
+        </Style>
+        <!-- button border Style End -->
+
+        <!-- button Style Start -->
+        <Style TargetType="Button" x:Key="basicButton">
+            <Setter Property="Width" Value="500"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style TargetType="Button" x:Key="greenBackgroundButton" BasedOn="{StaticResource basicButton}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Define the Border element -->
+                        <Border Style="{StaticResource greenBackgroundButtonBorder}">
+                            <!-- Add a ContentPresenter to the button -->
+                            <!-- Horizontal Snaps Vertical controls where the text of the button will be showing -->
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- button Style End -->
+
+
+        <!-- password box style start --> 
+        <ControlTemplate x:Key="boxControlTemplate">
+            <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black">
+                <ScrollViewer x:Name="PART_ContentHost" />
+            </Border>
+        </ControlTemplate>
+      
+        <Style x:Key="passwordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="225.82"/>
+            <Setter Property="Height" Value="35.88"/>
+            <Setter Property="ItemsControl.Template" Value="{StaticResource boxControlTemplate}"/>
+        </Style>
+        <!-- password box style end -->
+
     </Application.Resources>
 </Application>
