@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj": {}
+    "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj": {}
   },
   "projects": {
-    "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj": {
+    "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj",
+        "projectUniqueName": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj",
         "projectName": "BackupSystemTool",
-        "projectPath": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj",
+        "projectPath": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj",
         "packagesPath": "C:\\Users\\study\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\obj\\",
+        "outputPath": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\study\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -39,6 +39,16 @@
       "frameworks": {
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
+          "dependencies": {
+            "Gu.Wpf.Adorners": {
+              "target": "Package",
+              "version": "[2.1.1, )"
+            },
+            "sqlite-net-pcl": {
+              "target": "Package",
+              "version": "[1.8.116, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
