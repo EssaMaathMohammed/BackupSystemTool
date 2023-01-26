@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +24,25 @@ namespace BackupSystemTool
         public ConnectionsPage()
         {
             InitializeComponent();
+            ReadDatabase();
+        }
+
+        // Reading the fields of the database ConnectionItem Table
+        private List<ConnectionItem> ReadDatabase()
+        {
+            List<ConnectionItem> connectionItems = new List<ConnectionItem>();
+            // using with resources, automatically close the connection upon reaching the end of using block
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<ConnectionItem>();
+                connectionItems = conn.Table<ConnectionItem>().ToList();
+            }
+
+            if (connectionItems.Count > 0)
+            {
+                ConnectionsListView.ItemsSource = connectionItems;
+            }
+            return connectionItems;
         }
     }
 }

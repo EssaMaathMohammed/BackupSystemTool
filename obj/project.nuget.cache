@@ -1,8 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "F9sQUtBERgMUn4HCOcIDM639KDnXurGiwMkp+HNzEIq+yeC/D8RZNQtL9CBGx14T+eiiROja0DoQgZ9Xixnvxg==",
+  "dgSpecHash": "YTy6JIRVB55sNyJtAa5VBHpsdJ2plK+J9AL3iti11GilUq4Upw4FTNdVmfH97cQ3l6fbRbJzsbHr0bTBsSBMeg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\study\\.nuget\\packages\\gu.wpf.adorners\\2.1.1\\gu.wpf.adorners.2.1.1.nupkg.sha512",
+    "C:\\Users\\study\\.nuget\\packages\\sqlite-net-pcl\\1.8.116\\sqlite-net-pcl.1.8.116.nupkg.sha512",
+    "C:\\Users\\study\\.nuget\\packages\\sqlitepclraw.bundle_green\\2.0.4\\sqlitepclraw.bundle_green.2.0.4.nupkg.sha512",
+    "C:\\Users\\study\\.nuget\\packages\\sqlitepclraw.core\\2.0.4\\sqlitepclraw.core.2.0.4.nupkg.sha512",
+    "C:\\Users\\study\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.4\\sqlitepclraw.lib.e_sqlite3.2.0.4.nupkg.sha512",
+    "C:\\Users\\study\\.nuget\\packages\\sqlitepclraw.provider.dynamic_cdecl\\2.0.4\\sqlitepclraw.provider.dynamic_cdecl.2.0.4.nupkg.sha512",
+    "C:\\Users\\study\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512"
+  ],
   "logs": []
 }

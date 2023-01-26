@@ -42,6 +42,8 @@ namespace BackupSystemTool
                 conn.Insert(connectionItem);
             }
         }
+        
+        
 
         // navigate to the Connection Page (where connections will be listed and viewd)
         private void ConnectionPageButton_Click(object sender, RoutedEventArgs e)
