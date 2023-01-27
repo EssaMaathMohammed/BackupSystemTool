@@ -44,12 +44,11 @@ namespace BackupSystemTool.Controls
         // the values of the new item to the xaml file text blocks
         private static void setConnectionDetails(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ConnectionItemControl itemControls = d as ConnectionItemControl;
-
-            if (itemControls != null) { 
-                ConnectionItem newConnectionItem = e.NewValue as ConnectionItem;
+            if (d is ConnectionItemControl itemControls)
+            {
+                ConnectionItem newConnectionItem = (ConnectionItem)e.NewValue;
                 itemControls.ConnectionNameTextBlock.Text = newConnectionItem.Name;
-                itemControls.StatusTextBlock.Text = "Testing Value";
+                itemControls.StatusTextBlock.Text = "Status: UP";
                 Debug.WriteLine(e.NewValue.ToString());
 
             }
@@ -58,6 +57,7 @@ namespace BackupSystemTool.Controls
         public ConnectionItemControl()
         {
             InitializeComponent();
+            this.Height = 30;
         }
 
         private void expandButton_Click(object sender, RoutedEventArgs e)
@@ -70,7 +70,7 @@ namespace BackupSystemTool.Controls
             }
             else {
                 moreInfoStackPanel.Visibility = Visibility.Hidden;
-                this.Height = 40;
+                this.Height = 30;
                 expansionStatus = false;
             }
         }
