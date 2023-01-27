@@ -1,0 +1,65 @@
+﻿<Window x:Class="BackupSystemTool.AddConnectionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BackupSystemTool"
+        xmlns:adorners="http://gu.se/Adorners"
+        mc:Ignorable="d"
+        Title="AddConnectionDialog" Height="400" Width="350">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" >
+            <StackPanel x:Name="localDatabaseStackPanel" Visibility="Visible">
+                
+                <Label Content="Local Database" HorizontalAlignment="Center"/>
+                <TextBox adorners:Watermark.Text="Connection String"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Test Connection" Margin="5" Grid.Column="0"></Button>
+                    <Button Content="Add Connection" Margin="5" Grid.Column="1"></Button>
+                </Grid>
+                
+            </StackPanel>
+            
+            <StackPanel x:Name="cloudDatabaseStackPanel" Visibility="Collapsed">
+                <Label Content="Cloud Database" HorizontalAlignment="Center"/>
+
+                <TextBox adorners:Watermark.Text="Account Name" Margin="5"/>
+                <TextBox adorners:Watermark.Text="Password" Margin="5"/>
+                <TextBox adorners:Watermark.Text="Warehouse" Margin="5"/>
+                <TextBox adorners:Watermark.Text="Database Name" Margin="5"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Test Connection" Margin="5" Grid.Column="0"></Button>
+                    <Button Content="Add Connection" Margin="5" Grid.Column="1"></Button>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+        
+        <RadioButton x:Name="localDatabaseRadioButton" Content="Local Database" 
+                     Checked="localDatabaseRadioButton_Checked"
+                     IsChecked="True"/>
+        <RadioButton x:Name="cloudDatabaseRadioButton" 
+                     Content="Cloud Database" 
+                     Grid.Column="1" 
+                     Checked="cloudDatabaseRadioButton_Checked"/>
+        
+    </Grid>
+</Window>

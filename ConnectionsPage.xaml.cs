@@ -44,5 +44,11 @@ namespace BackupSystemTool
             }
             return connectionItems;
         }
+
+        private void addConnection_Click(object sender, RoutedEventArgs e)
+        {
+            AddConnectionDialog dialog = new AddConnectionDialog();
+            dialog.ShowDialog();
+        }
     }
 }

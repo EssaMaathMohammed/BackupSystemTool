@@ -6,9 +6,16 @@
         xmlns:uc="clr-namespace:BackupSystemTool.Controls"
         xmlns:local="clr-namespace:BackupSystemTool"
         mc:Ignorable="d"
-        Title="ConnectionsPage" Height="450" Width="800">
+        Title="ConnectionsPage" Height="500" Width="800" MinWidth="700" MinHeight="500">
     <Grid>
-        <ListView x:Name="ConnectionsListView" Width="700" Height="400">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="600"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="ConnectionsListView" 
+                  Margin="5" 
+                  HorizontalAlignment="Left"
+                  MinWidth="550">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -20,5 +27,13 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <Button Content="Add"
+                Click="addConnection_Click"
+                Grid.Column="1" 
+                Width="50" Height="50" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Bottom" 
+                Margin="15 0 15 10"/>
     </Grid>
 </Window>

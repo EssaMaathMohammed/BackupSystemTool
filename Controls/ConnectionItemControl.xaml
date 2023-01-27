@@ -5,21 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BackupSystemTool.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="600">
-    <Grid>
-        <StackPanel Background="White" Margin="5">
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock x:Name="ConnectionNameTextBlock" Text="Connection Name" Margin="20 7 0 0"/>
-                <TextBlock x:Name="StatusTextBlock" Text="Status: " Margin="300 7 0 0"/>
-                <Button x:Name="expandButton" Content="V" Margin="100 0 0 0"
-                        Click="expandButton_Click" Width="15" Height="17"/>
-            </StackPanel>
-            <StackPanel x:Name="moreInfoStackPanel" Visibility="Hidden" Margin="5">
-                <TextBlock Text="Last Backup: " Margin="20 5 0 0"/>
-                <TextBlock Text="Size: " Margin="20 5 0 0"/>
-                <TextBlock Text="Connection Type: " Margin="20 5 0 0"/>
-                <TextBlock Text="Backup Location: " Margin="20 5 0 0"/>
-            </StackPanel>
+             d:DesignHeight="30" d:DesignWidth="600">
+
+    <StackPanel Background="White">
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" MinWidth="200"></ColumnDefinition>
+                <ColumnDefinition Width="3*" MinWidth="200"></ColumnDefinition>
+                <ColumnDefinition Width="*" MinWidth="50"></ColumnDefinition>
+                <ColumnDefinition Width="*" MinWidth="50"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="ConnectionNameTextBlock" Text="Connection Name" 
+                           Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+            <TextBlock x:Name="StatusTextBlock" Text="Status: Up"
+                           Grid.Column="2" Grid.Row="0"/>
+            <Button x:Name="expandButton" Content="V"
+                        Click="expandButton_Click" 
+                        Width="15" 
+                        Height="17"
+                        Grid.Column="3" Grid.Row="0"/>
+        </Grid>
+        <StackPanel x:Name="moreInfoStackPanel" Visibility="Hidden" Margin="5">
+            <TextBlock Text="Last Backup: " Margin="20 5 0 0"/>
+            <TextBlock Text="Size: " Margin="20 5 0 0"/>
+            <TextBlock Text="Connection Type: " Margin="20 5 0 0"/>
+            <TextBlock Text="Backup Location: " Margin="20 5 0 0"/>
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </UserControl>
