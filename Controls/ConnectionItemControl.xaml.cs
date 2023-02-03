@@ -65,14 +65,31 @@ namespace BackupSystemTool.Controls
             if (!expansionStatus)
             {
                 moreInfoStackPanel.Visibility = Visibility.Visible;
-                this.Height = 140;
+                this.Height = 150;
                 expansionStatus = true;
             }
             else {
-                moreInfoStackPanel.Visibility = Visibility.Hidden;
+                moreInfoStackPanel.Visibility = Visibility.Collapsed;
                 this.Height = 30;
                 expansionStatus = false;
             }
+        }
+
+        private void backupButton_Click(object sender, RoutedEventArgs e)
+        {
+            BackupDialog connectionsPage = new BackupDialog();
+            connectionsPage.ShowDialog();
+        }
+
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            EditConnectionDialog editConnectionDialog = new EditConnectionDialog(ConnectionItem);
+            editConnectionDialog.ShowDialog();
+        }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

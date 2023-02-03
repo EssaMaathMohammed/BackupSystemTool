@@ -1,0 +1,53 @@
+﻿<Window x:Class="BackupSystemTool.BackupDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BackupSystemTool"
+        xmlns:adorners="http://gu.se/Adorners"
+        mc:Ignorable="d"
+        Title="BackupDialog" Height="400" Width="350">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" >
+            <StackPanel x:Name="backupStackPanel" Visibility="Visible">
+
+                <Label Content="Schedule Backup" HorizontalAlignment="Center"/>
+                <TextBox adorners:Watermark.Text="Frequency" Margin="5"/>
+                <TextBox adorners:Watermark.Text="Starting Date" Margin="5"/>
+                <TextBox adorners:Watermark.Text="Ending Date" Margin="5"/>
+                <TextBox adorners:Watermark.Text="Location" Margin="5"/>
+                <TextBox adorners:Watermark.Text="Encryption Key" Margin="5"/>
+                <Button Content="Save" Margin="5" Grid.Column="0"/>
+
+
+            </StackPanel>
+
+            <StackPanel x:Name="backupOnceStackPanel" Visibility="Collapsed">
+                <Label Content="Backup Once" HorizontalAlignment="Center"/>
+
+                <TextBox adorners:Watermark.Text="Location" Margin="5"/>
+                <TextBox adorners:Watermark.Text="Encryption Key" Margin="5"/>
+                <Button Content="Backup Now" Margin="5" Grid.Column="1"/>
+
+            </StackPanel>
+        </StackPanel>
+
+        <RadioButton x:Name="scheduleBackupRadioButton" Content="Schedule Backup" 
+                     Checked="scheduleBackupRadioButton_Checked"
+                     IsChecked="True"/>
+        <RadioButton x:Name="backupOnceRadioButton" 
+                     Content="Backup Once" 
+                     Grid.Column="1" 
+                     Checked="backupOnceRadioButton_Checked"/>
+
+    </Grid>
+</Window>

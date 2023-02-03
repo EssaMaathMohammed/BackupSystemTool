@@ -27,7 +27,5 @@ namespace BackupSystemTool
                 Directory.CreateDirectory(databaseFolderPath);
             }
         }
-
-    }
-    
+    }   
 }
