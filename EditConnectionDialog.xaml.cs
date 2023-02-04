@@ -20,21 +20,24 @@ namespace BackupSystemTool
     /// </summary>
     public partial class EditConnectionDialog : Window
     {
-        public ConnectionItem connectionItem { get; set; }
+        public ConnectionItem ConnectionItem { get; set; }
         public EditConnectionDialog(ConnectionItem connectionItem)
         {
             InitializeComponent();
-            this.connectionItem = connectionItem;
+            this.ConnectionItem = connectionItem;
             connectionNameTextBox.Text = connectionItem.Name;
+            connectionStringTextBox.Text = connectionItem.ConnectionString;
         }
 
         private void saveChangesButton_Click(object sender, RoutedEventArgs e)
         {
-            this.connectionItem.Name = connectionNameTextBox.Text;
+            ConnectionItem.Name = connectionNameTextBox.Text;
+            ConnectionItem.ConnectionString = connectionStringTextBox.Text;
+
             using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
             {
                 sqliteConnection.CreateTable<ConnectionItem>();
-                sqliteConnection.Update(this.connectionItem);
+                sqliteConnection.Update(this.ConnectionItem);
             }
 
         }

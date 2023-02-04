@@ -6,22 +6,28 @@
         xmlns:local="clr-namespace:BackupSystemTool"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="EditConnectionDialog" Height="150" Width="350">
+        Title="EditConnectionDialog" Height="160" Width="350">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" >
             <StackPanel x:Name="editConnectionStackPanel">
 
                 <Label Content="Editing Connection" HorizontalAlignment="Center"/>
                 <TextBox x:Name="connectionNameTextBox" adorners:Watermark.Text="Connection Name" Margin="5"/>
-                <Button Content="Save Changes" Margin="5" Grid.Column="0" Click="saveChangesButton_Click"/>
+                <TextBox x:Name="connectionStringTextBox" adorners:Watermark.Text="Connection String" Margin="5"/>
 
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Test Connection" Margin="5" Grid.Column="0"/>
+                    <Button Content="Save Changes" Margin="5" Grid.Column="1" Click="saveChangesButton_Click"/>
+                </Grid>
+                
             </StackPanel>
         </StackPanel>
     </Grid>
