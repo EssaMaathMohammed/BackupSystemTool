@@ -51,3 +51,7 @@ C:\Users\study\Source\Repos\BackupSystemTool\obj\Debug\net7.0-windows\GeneratedI
 C:\Users\study\Source\Repos\BackupSystemTool\obj\Debug\net7.0-windows\Controls\ConnectionItemControl.baml
 C:\Users\study\Source\Repos\BackupSystemTool\obj\Debug\net7.0-windows\AddConnectionDialog.g.cs
 C:\Users\study\Source\Repos\BackupSystemTool\obj\Debug\net7.0-windows\AddConnectionDialog.baml
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BackupDialog.g.cs
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BackupDialog.baml
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\EditConnectionDialog.g.cs
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\EditConnectionDialog.baml

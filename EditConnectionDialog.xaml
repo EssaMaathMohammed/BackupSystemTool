@@ -1,0 +1,34 @@
+﻿<Window x:Class="BackupSystemTool.EditConnectionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BackupSystemTool"
+        xmlns:adorners="http://gu.se/Adorners"
+        mc:Ignorable="d"
+        Title="EditConnectionDialog" Height="160" Width="350">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" >
+            <StackPanel x:Name="editConnectionStackPanel">
+
+                <Label Content="Editing Connection" HorizontalAlignment="Center"/>
+                <TextBox x:Name="connectionNameTextBox" adorners:Watermark.Text="Connection Name" Margin="5"/>
+                <TextBox x:Name="connectionStringTextBox" adorners:Watermark.Text="Connection String" Margin="5"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Test Connection" Margin="5" Grid.Column="0"/>
+                    <Button Content="Save Changes" Margin="5" Grid.Column="1" Click="saveChangesButton_Click"/>
+                </Grid>
+                
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

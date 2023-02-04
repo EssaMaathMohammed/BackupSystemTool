@@ -28,7 +28,9 @@ namespace BackupSystemTool
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
-
+            ConnectionsPage connectionsPage = new ConnectionsPage();
+            connectionsPage.Show();
+            this.Close();
         }
 
         

@@ -10,10 +10,16 @@
     <Compile Update="AddConnectionDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="BackupDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="ConnectionsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="DatabaseTester.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditConnectionDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="RegisterPage.xaml.cs">
@@ -24,6 +30,9 @@
     <Page Update="AddConnectionDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="BackupDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Controls\ConnectionItemControl.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -31,6 +40,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="DatabaseTester.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="EditConnectionDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="LoginPage.xaml">

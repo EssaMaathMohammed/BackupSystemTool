@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BackupSystemTool.Controls
 {
@@ -65,13 +67,38 @@ namespace BackupSystemTool.Controls
             if (!expansionStatus)
             {
                 moreInfoStackPanel.Visibility = Visibility.Visible;
-                this.Height = 140;
+                this.Height = 150;
                 expansionStatus = true;
             }
             else {
-                moreInfoStackPanel.Visibility = Visibility.Hidden;
+                moreInfoStackPanel.Visibility = Visibility.Collapsed;
                 this.Height = 30;
                 expansionStatus = false;
+            }
+        }
+
+        private void backupButton_Click(object sender, RoutedEventArgs e)
+        {
+            BackupDialog connectionsPage = new BackupDialog();
+            connectionsPage.ShowDialog();
+        }
+
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            EditConnectionDialog editConnectionDialog = new EditConnectionDialog(ConnectionItem);
+            editConnectionDialog.ShowDialog();
+        }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult messageBoxResult = MessageBox.Show(" Are you sure you want to delete this item?", "Delete Confirmation" 
+                , System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (messageBoxResult == MessageBoxResult.Yes) {
+                using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
+                {
+                    sqliteConnection.CreateTable<ConnectionItem>();
+                    sqliteConnection.Delete(ConnectionItem);
+                }
             }
         }
     }
