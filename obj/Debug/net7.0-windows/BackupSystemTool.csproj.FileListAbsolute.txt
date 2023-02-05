@@ -55,3 +55,5 @@ C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BackupDial
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BackupDialog.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\EditConnectionDialog.g.cs
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\EditConnectionDialog.baml
+C:\Users\study\source\repos\BackupSystemTool\bin\Debug\net7.0-windows\System.Management.dll
+C:\Users\study\source\repos\BackupSystemTool\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Management.dll
