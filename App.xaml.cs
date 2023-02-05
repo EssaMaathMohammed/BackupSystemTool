@@ -26,6 +26,9 @@ namespace BackupSystemTool
             {
                 Directory.CreateDirectory(databaseFolderPath);
             }
+            // checks if a key already exists or no, creates a key if no key exists.
+            KeyGenerator keyGenerator = new KeyGenerator();
+            MessageBox.Show(keyGenerator.evaluateKey());
         }
     }   
 }
