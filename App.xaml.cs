@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace BackupSystemTool
         static string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         static string databaseFolderPath = Path.Combine(folderPath, ApplicationFileName);
         public static string databasePath = Path.Combine(databaseFolderPath, databaseName);
+        public static string EncryptionKey { get; set; }
         public App() {
             // checks if directory exists, if not creates it.
             if (!Directory.Exists(databaseFolderPath))
@@ -28,7 +30,7 @@ namespace BackupSystemTool
             }
             // checks if a key already exists or no, creates a key if no key exists.
             KeyGenerator keyGenerator = new KeyGenerator();
-            MessageBox.Show(keyGenerator.evaluateKey());
+            EncryptionKey = keyGenerator.evaluateKey();
         }
     }   
 }

@@ -33,9 +33,10 @@ namespace BackupSystemTool
             // Combine the CPU ID and MAC address to create the key
             var key = getCPUId() + getMacAddress() + generateSalt();
 
+            Cryptograpy cryptograpy = new Cryptograpy();    
             // Hash the key to get a fixed-length value
-            var hashedKey = hashKey(key);
-
+            var hashedKey = cryptograpy.hashText(key);
+            hashedKey = hashedKey.Substring(0, 32);
             // Key doesn't exist, generate a new key
             var newKey = Registry.CurrentUser.CreateSubKey(KeyName);
             newKey.SetValue(SubKeyName, hashedKey);
@@ -72,18 +73,7 @@ namespace BackupSystemTool
 
             return macAddress;
         }
-        private string hashKey(string key)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                var hashedKey = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(key));
-                //The "-" characters are used as separators when converting a byte array to a string representation using the BitConverter.ToString method.
-                //The "-" characters are not necessary for the purpose of storing or using the hashed key as a cryptographic key,
-                //and so they are often removed to make the resulting string more compact and usable as a key.
-                return BitConverter.ToString(hashedKey).Replace("-", "");
-            }
-        }
-
+   
         // generate a random number or bytes (16 length is specified) to be used as salt
         private string generateSalt()
         {
