@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -32,9 +34,12 @@ namespace BackupSystemTool
         {
             if (ValidatePin())
             {
-                ConnectionsPage connectionsPage = new ConnectionsPage();
-                connectionsPage.Show();
-                this.Close();
+                Cryptograpy encryption = new Cryptograpy(); 
+                string cipherText =  encryption.encryptStringAES(PINTextBox.Password, App.EncryptionKey);
+                Debug.WriteLine(cipherText);
+                //ConnectionsPage connectionsPage = new ConnectionsPage();
+                //connectionsPage.Show();
+                //this.Close();
             }
         }
 
@@ -61,7 +66,7 @@ namespace BackupSystemTool
             return true;
         }
 
-
+        
 
     }
 }
