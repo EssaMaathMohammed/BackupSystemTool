@@ -1,4 +1,6 @@
-﻿using Gu.Wpf.Adorners;
+﻿using BackupSystemTool.DatabaseClasses;
+using Gu.Wpf.Adorners;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,17 +34,51 @@ namespace BackupSystemTool
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
+            // variable to track whether the login was successful
+            bool loggedIn = false;
+
+            // Validate the user-inputted PIN
             if (ValidatePin())
             {
-                Cryptograpy encryption = new Cryptograpy(); 
-                string cipherText =  encryption.encryptStringAES(PINTextBox.Password, App.EncryptionKey);
-                Debug.WriteLine(cipherText);
-                //ConnectionsPage connectionsPage = new ConnectionsPage();
-                //connectionsPage.Show();
-                //this.Close();
+                using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
+                {
+                    Cryptograpy cryptograpy = new Cryptograpy();
+                    // Create the table for UserItem if it does not exist
+                    sqliteConnection.CreateTable<UserItem>();
+                    // Get a list of all UserItem objects stored in the database
+                    List<UserItem> users = sqliteConnection.Table<UserItem>().ToList();
+
+                    // Get the user's inputted PIN
+                    string userInput = PINTextBox.Password;
+
+                    // Loop through each user in the database
+                    foreach (UserItem user in users)
+                    {
+                        // Combine the salt and user inputted PIN
+                        string saltedPIN = userInput + user.salt;
+                        // Hash the salted PIN
+                        string hashedSaltedPIN = cryptograpy.hashText(saltedPIN);
+                        // Check if the hashed salted PIN matches the stored ciphertext
+                        if (hashedSaltedPIN.Equals(user.ciphertext))
+                        {
+                            // If a match is found, set loggedIn to true
+                            loggedIn = true;
+                            // Open the ConnectionsPage and close the login page
+                            ConnectionsPage connectionsPage = new ConnectionsPage();
+                            connectionsPage.Show();
+                            this.Close();
+                            // Break out of the loop since the user has been found
+                            break;
+                        }
+                    }
+                }
+                // If no matching user is found, show an error message
+                if (!loggedIn)
+                {
+                    MessageBox.Show("Incorrect PIN. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
-
         private bool ValidatePin()
         {
             if (string.IsNullOrEmpty(PINTextBox.Password))
