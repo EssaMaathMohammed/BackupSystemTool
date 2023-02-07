@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6o/zvjGWRPeupzqLhRVVyQnE6k2Aa6Vixvb3CpMe/ad0vlM6oLimXFH34NHPF/3ARwAbFwLoZFEVIO95sibKWA==",
+  "dgSpecHash": "yGm3U8Z/gc292YQDNA8yUrqHMDdjLwVK8EyFMIheGjjF6PiR7X4xUL5GcwjRW3uVR+imGh0E7Vnq0265IOaT1Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj",
+  "projectFilePath": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\study\\.nuget\\packages\\gu.wpf.adorners\\2.1.1\\gu.wpf.adorners.2.1.1.nupkg.sha512",
     "C:\\Users\\study\\.nuget\\packages\\sqlite-net-pcl\\1.8.116\\sqlite-net-pcl.1.8.116.nupkg.sha512",
