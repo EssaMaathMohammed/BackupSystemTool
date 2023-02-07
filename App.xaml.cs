@@ -17,7 +17,7 @@ namespace BackupSystemTool
     {
         // Creates a path to the database directory location + Database Name
         static string ApplicationFileName = "BackupSystemTool";
-        static string databaseName = "ConnectionsDB.db";
+        static string databaseName = "PII.db";
         static string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         static string databaseFolderPath = Path.Combine(folderPath, ApplicationFileName);
         public static string databasePath = Path.Combine(databaseFolderPath, databaseName);
@@ -28,9 +28,6 @@ namespace BackupSystemTool
             {
                 Directory.CreateDirectory(databaseFolderPath);
             }
-            // checks if a key already exists or no, creates a key if no key exists.
-            KeyGenerator keyGenerator = new KeyGenerator();
-            EncryptionKey = keyGenerator.evaluateKey();
         }
     }   
 }
