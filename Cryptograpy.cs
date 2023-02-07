@@ -66,12 +66,23 @@ namespace BackupSystemTool
         {
             using (var sha256 = SHA256.Create())
             {
-                var hashedKey = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(text));
+                var hashedKey = sha256.ComputeHash(Encoding.UTF8.GetBytes(text));
                 //The "-" characters are used as separators when converting a byte array to a string representation using the BitConverter.ToString method.
                 //The "-" characters are not necessary for the purpose of storing or using the hashed key as a cryptographic key,
                 //and so they are often removed to make the resulting string more compact and usable as a key.
                 return BitConverter.ToString(hashedKey).Replace("-", "");
             }
+        }
+
+        // generate a random number or bytes (16 length is specified) to be used as salt
+        public string generateSalt()
+        {
+            byte[] salt = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            return Convert.ToBase64String(salt);
         }
     }
 }
