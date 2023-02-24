@@ -31,7 +31,7 @@ namespace BackupSystemTool
             var saltedKey = getCPUId() + getMacAddress() + this.salt;
 
             // Hash the key to get a fixed-length value
-            var hashedKey = cryptograpy.hashText(salt);
+            var hashedKey = cryptograpy.hashText(saltedKey);
             hashedKey = hashedKey.Substring(0, 32);
             // Key doesn't exist, generate a new key
             var newKey = Registry.CurrentUser.CreateSubKey(KeyName);
@@ -69,7 +69,5 @@ namespace BackupSystemTool
 
             return macAddress;
         }
-   
-        
     }
 }

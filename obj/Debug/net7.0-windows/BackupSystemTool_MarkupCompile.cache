@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\study\Source\Repos\BackupSystemTool\obj\Debug\net7.0-windows\
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\
 BackupSystemTool
 none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
-C:\Users\study\Source\Repos\BackupSystemTool\App.xaml
+C:\Users\study\source\repos\BackupSystemTool\App.xaml
 8-1178500050
 
-14-516000532
-2051201137579
+16308979105
+2061398603659
 AddConnectionDialog.xaml;BackupDialog.xaml;ConnectionsPage.xaml;Controls\ConnectionItemControl.xaml;DatabaseTester.xaml;EditConnectionDialog.xaml;LoginPage.xaml;RegisterPage.xaml;
 
 False

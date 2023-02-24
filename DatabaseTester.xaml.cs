@@ -53,7 +53,15 @@ namespace BackupSystemTool
             connectionsPage.Show();
             this.Close();
         }
+        private void MysqlConnector_Click(object sender, RoutedEventArgs e)
+        {
+            MysqlConnector connector = new MysqlConnector();
+            string databases = "";
+            foreach (string conn in connector.GetDatabases("localhost", "root", "")) {
+                databases += conn + " ";
+            }
+            MessageBox.Show(databases);
+        }
 
-      
     }
 }

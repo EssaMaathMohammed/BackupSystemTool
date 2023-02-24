@@ -24,16 +24,35 @@ namespace BackupSystemTool
             InitializeComponent();
         }
 
-        private void localDatabaseRadioButton_Checked(object sender, RoutedEventArgs e)
+        private void LocalDatabaseRadioButton_Checked(object sender, RoutedEventArgs e)
         {
             localDatabaseStackPanel.Visibility = Visibility.Visible;
             cloudDatabaseStackPanel.Visibility = Visibility.Collapsed;  
+            lanDatabaseStackPanel.Visibility = Visibility.Collapsed;
         }
 
-        private void cloudDatabaseRadioButton_Checked(object sender, RoutedEventArgs e)
+        private void CloudDatabaseRadioButton_Checked(object sender, RoutedEventArgs e)
         {
             cloudDatabaseStackPanel.Visibility = Visibility.Visible;
             localDatabaseStackPanel.Visibility = Visibility.Collapsed;
+            lanDatabaseStackPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void LanDatabaseRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            lanDatabaseStackPanel.Visibility = Visibility.Visible;
+            cloudDatabaseStackPanel.Visibility = Visibility.Collapsed;
+            localDatabaseStackPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void useConnectionStringRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void useParametersStringRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

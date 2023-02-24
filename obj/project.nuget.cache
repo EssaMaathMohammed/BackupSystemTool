@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "yGm3U8Z/gc292YQDNA8yUrqHMDdjLwVK8EyFMIheGjjF6PiR7X4xUL5GcwjRW3uVR+imGh0E7Vnq0265IOaT1Q==",
+  "dgSpecHash": "E4ERUGxzQFSAzKgVBIfuEQBJWeR6l3rUQ1zexiPHE10H/GvQb7lQdvm6TBZI9WjpK2S1lMTl9I5sIWFSsEsYRg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj",
+  "projectFilePath": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\study\\.nuget\\packages\\gu.wpf.adorners\\2.1.1\\gu.wpf.adorners.2.1.1.nupkg.sha512",
+    "C:\\Users\\study\\.nuget\\packages\\mysqlconnector\\2.2.5\\mysqlconnector.2.2.5.nupkg.sha512",
     "C:\\Users\\study\\.nuget\\packages\\sqlite-net-pcl\\1.8.116\\sqlite-net-pcl.1.8.116.nupkg.sha512",
     "C:\\Users\\study\\.nuget\\packages\\sqlitepclraw.bundle_green\\2.0.4\\sqlitepclraw.bundle_green.2.0.4.nupkg.sha512",
     "C:\\Users\\study\\.nuget\\packages\\sqlitepclraw.core\\2.0.4\\sqlitepclraw.core.2.0.4.nupkg.sha512",

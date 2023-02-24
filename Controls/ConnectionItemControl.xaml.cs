@@ -78,12 +78,6 @@ namespace BackupSystemTool.Controls
             }
         }
 
-        private void backupButton_Click(object sender, RoutedEventArgs e)
-        {
-            BackupDialog connectionsPage = new BackupDialog();
-            connectionsPage.ShowDialog();
-        }
-
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
             EditConnectionDialog editConnectionDialog = new EditConnectionDialog(ConnectionItem);
