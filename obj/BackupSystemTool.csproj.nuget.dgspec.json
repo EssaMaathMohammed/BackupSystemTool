@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj": {}
+    "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj": {}
   },
   "projects": {
-    "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj": {
+    "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj",
+        "projectUniqueName": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj",
         "projectName": "BackupSystemTool",
-        "projectPath": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\BackupSystemTool.csproj",
+        "projectPath": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj",
         "packagesPath": "C:\\Users\\study\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\study\\Source\\Repos\\BackupSystemTool\\obj\\",
+        "outputPath": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\study\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -43,6 +43,10 @@
             "Gu.Wpf.Adorners": {
               "target": "Package",
               "version": "[2.1.1, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.2.5, )"
             },
             "System.Management": {
               "target": "Package",
