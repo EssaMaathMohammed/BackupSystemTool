@@ -40,8 +40,8 @@ namespace BackupSystemTool.Controls
         // This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ConnectionItemProperty =
             DependencyProperty.Register("ConnectionItem", typeof(ConnectionItem),
-                typeof(ConnectionItemControl), new PropertyMetadata(new ConnectionItem { Name = "Defualt Item",
-                    ConnectionString = "Default Connection String" }, setConnectionDetails));
+                typeof(ConnectionItemControl), new PropertyMetadata(new ConnectionItem { ConnectionName = "Defualt Item",
+                    ServerName = "Default Server Name" }, setConnectionDetails));
 
         // The new item (connection Item) gets bound, we call a custom method to assign
         // the values of the new item to the xaml file text blocks
@@ -50,7 +50,7 @@ namespace BackupSystemTool.Controls
             if (d is ConnectionItemControl itemControls)
             {
                 ConnectionItem newConnectionItem = (ConnectionItem)e.NewValue;
-                itemControls.ConnectionNameTextBlock.Text = newConnectionItem.Name;
+                itemControls.ConnectionNameTextBlock.Text = newConnectionItem.ConnectionName;
                 itemControls.StatusTextBlock.Text = "Status: UP";
                 Debug.WriteLine(e.NewValue.ToString());
 
@@ -80,7 +80,7 @@ namespace BackupSystemTool.Controls
 
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
-            EditConnectionDialog editConnectionDialog = new EditConnectionDialog(ConnectionItem);
+            EditConnectionDialog editConnectionDialog = new EditConnectionDialog(ConnectionItem,this);
             editConnectionDialog.ShowDialog();
         }
 
@@ -95,6 +95,7 @@ namespace BackupSystemTool.Controls
                     sqliteConnection.Delete(ConnectionItem);
                 }
             }
+            this.Visibility = Visibility.Collapsed;
         }
     }
 }

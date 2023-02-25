@@ -26,25 +26,25 @@ namespace BackupSystemTool
         {
             InitializeComponent();
         }
+
+        // Moved To AddConnectionDialog
         private void addConnectionButton_Click(object sender, RoutedEventArgs e)
         {
             // creates a Connection Item which includes ID (auto),
             // Connection Name, Connection String
-            ConnectionItem connectionItem = new ConnectionItem()
-            {
-                Name = databaseNameTextBox.Text,
-                ConnectionString = databaseConnection.Text
-            };
+            //ConnectionItem connectionItem = new ConnectionItem()
+            //{
+            //    ConnectionName = databaseNameTextBox.Text,
+            //    ServerName = databaseConnection.Text
+            //};
 
-            // using with resources, automatically close the connection upon reaching the end of using block
-            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath)) 
-            {
-                conn.CreateTable<ConnectionItem>();
-                conn.Insert(connectionItem);
-            }
+            //// using with resources, automatically close the connection upon reaching the end of using block
+            //using (SQLiteConnection conn = new SQLiteConnection(App.databasePath)) 
+            //{
+            //    conn.CreateTable<ConnectionItem>();
+            //    conn.Insert(connectionItem);
+            //    }
         }
-        
-        
 
         // navigate to the Connection Page (where connections will be listed and viewd)
         private void ConnectionPageButton_Click(object sender, RoutedEventArgs e)

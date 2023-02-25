@@ -89,7 +89,7 @@
 
         <!-- connection textbox style start -->
         <Style TargetType="TextBox" x:Key="connectionTextBox">
-            <Setter Property="Width" Value="160"/>
+            <Setter Property="Width" Value="200"/>
             <Setter Property="Height" Value="21"/>
             <Setter Property="HorizontalAlignment" Value="left"/>
             <Setter Property="FontSize" Value="12"/>
@@ -99,7 +99,7 @@
         
         <!-- connection PasswordBox style start -->
         <Style TargetType="PasswordBox" x:Key="connectionPasswordBox">
-            <Setter Property="Width" Value="160"/>
+            <Setter Property="Width" Value="200"/>
             <Setter Property="Height" Value="21"/>
             <Setter Property="HorizontalAlignment" Value="left"/>
             <Setter Property="FontSize" Value="12"/>

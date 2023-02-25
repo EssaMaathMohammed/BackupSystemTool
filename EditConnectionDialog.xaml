@@ -17,7 +17,7 @@
 
                 <Label Content="Editing Connection" HorizontalAlignment="Center"/>
                 <TextBox x:Name="connectionNameTextBox" adorners:Watermark.Text="Connection Name" Margin="5"/>
-                <TextBox x:Name="connectionStringTextBox" adorners:Watermark.Text="Connection String" Margin="5"/>
+                <TextBox x:Name="connectionServerNameTextBox" adorners:Watermark.Text="Server Name" Margin="5"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>

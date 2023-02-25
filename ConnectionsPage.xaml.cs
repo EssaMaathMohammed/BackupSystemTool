@@ -29,7 +29,7 @@ namespace BackupSystemTool
         }
 
         // Reading the fields of the database ConnectionItem Table
-        private List<ConnectionItem> ReadDatabase()
+        public List<ConnectionItem> ReadDatabase()
         {
             List<ConnectionItem> connectionItems = new List<ConnectionItem>();
             // using with resources, automatically close the connection upon reaching the end of using block
@@ -48,7 +48,7 @@ namespace BackupSystemTool
 
         private void addConnection_Click(object sender, RoutedEventArgs e)
         {
-            AddConnectionDialog dialog = new AddConnectionDialog();
+            AddConnectionDialog dialog = new AddConnectionDialog(this);
             dialog.ShowDialog();
         }
     }
