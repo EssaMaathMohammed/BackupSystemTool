@@ -1,4 +1,5 @@
-﻿using BackupSystemTool.DatabaseClasses;
+﻿using BackupSystemTool.Controls;
+using BackupSystemTool.DatabaseClasses;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -22,25 +23,28 @@ namespace BackupSystemTool
     public partial class EditConnectionDialog : Window
     {
         public ConnectionItem ConnectionItem { get; set; }
-        public EditConnectionDialog(ConnectionItem connectionItem)
+        public ConnectionItemControl currentItem { get; set; }
+        public EditConnectionDialog(ConnectionItem connectionItem, ConnectionItemControl currentItem)
         {
             InitializeComponent();
             this.ConnectionItem = connectionItem;
-            connectionNameTextBox.Text = connectionItem.Name;
-            connectionStringTextBox.Text = connectionItem.ConnectionString;
+            this.currentItem = currentItem;
+            connectionNameTextBox.Text = connectionItem.ConnectionName;
+            connectionServerNameTextBox.Text = connectionItem.ServerName;
         }
 
         private void saveChangesButton_Click(object sender, RoutedEventArgs e)
         {
-            ConnectionItem.Name = connectionNameTextBox.Text;
-            ConnectionItem.ConnectionString = connectionStringTextBox.Text;
+            ConnectionItem.ConnectionName = connectionNameTextBox.Text;
+            ConnectionItem.ServerName = connectionServerNameTextBox.Text;
 
             using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
             {
                 sqliteConnection.CreateTable<ConnectionItem>();
                 sqliteConnection.Update(this.ConnectionItem);
             }
-
+            this.currentItem.ConnectionNameTextBlock.Text = connectionNameTextBox.Text;
+            this.Close();
         }
     }
 }

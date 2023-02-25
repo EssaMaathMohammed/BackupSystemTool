@@ -11,8 +11,22 @@ namespace BackupSystemTool.DatabaseClasses
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string ConnectionString { get; set; }
+
+        [MaxLength(50)]
+        public string ConnectionName { get; set; }
+
+        [MaxLength(50)]
+        public string Username { get; set; }
+
+
+        [MaxLength(50)]
+        public string Password { get; set; }
+
+        [MaxLength(50)]
+        public string ServerName { get; set; }
+
+        public string PortNumber { get; set; }
+
     }
 
 

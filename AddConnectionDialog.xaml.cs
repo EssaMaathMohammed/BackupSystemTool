@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BackupSystemTool.DatabaseClasses;
+using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,40 +21,34 @@ namespace BackupSystemTool
     /// </summary>
     public partial class AddConnectionDialog : Window
     {
-        public AddConnectionDialog()
+        ConnectionsPage connectionsPage;
+        public AddConnectionDialog(ConnectionsPage connectionsPage)
         {
             InitializeComponent();
+            this.connectionsPage = connectionsPage;
         }
 
-        private void LocalDatabaseRadioButton_Checked(object sender, RoutedEventArgs e)
+        private void AddConnectionButton_Click(object sender, RoutedEventArgs e)
         {
-            localDatabaseStackPanel.Visibility = Visibility.Visible;
-            cloudDatabaseStackPanel.Visibility = Visibility.Collapsed;  
-            lanDatabaseStackPanel.Visibility = Visibility.Collapsed;
-        }
+            // creates a Connection Item which includes ID (auto),
+            // Connection Name, Connection String
+            ConnectionItem connectionItem = new ConnectionItem()
+            {
+                ConnectionName = connectionNameTextBox.Text,
+                Username = usernameTextBox.Text,
+                Password = userPasswordPasswordBox.Password,
+                ServerName = serverNameTextBox.Text,
+                PortNumber = portNumberTextBox.Text,
+            };
 
-        private void CloudDatabaseRadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            cloudDatabaseStackPanel.Visibility = Visibility.Visible;
-            localDatabaseStackPanel.Visibility = Visibility.Collapsed;
-            lanDatabaseStackPanel.Visibility = Visibility.Collapsed;
-        }
-
-        private void LanDatabaseRadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            lanDatabaseStackPanel.Visibility = Visibility.Visible;
-            cloudDatabaseStackPanel.Visibility = Visibility.Collapsed;
-            localDatabaseStackPanel.Visibility = Visibility.Collapsed;
-        }
-
-        private void useConnectionStringRadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void useParametersStringRadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-
+            // using with resources, automatically close the connection upon reaching the end of using block
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<ConnectionItem>();
+                conn.Insert(connectionItem);
+            }
+            connectionsPage.ReadDatabase();
+            this.Close();
         }
     }
 }

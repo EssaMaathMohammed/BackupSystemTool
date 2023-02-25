@@ -6,109 +6,32 @@
         xmlns:local="clr-namespace:BackupSystemTool"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="AddConnectionDialog" Height="400" Width="360">
+        Title="AddConnectionDialog" Height="250" Width="360">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-            <StackPanel x:Name="localDatabaseStackPanel" Visibility="Visible">
+        <StackPanel Grid.Column="0">
 
-                <Label Content="Local Database" HorizontalAlignment="Center"/>
-                <TextBox adorners:Watermark.Text="Connection String" 
-                         Style="{StaticResource connectionTextBox}"
-                         Width="330"/>
+            <StackPanel x:Name="addConnectionStackPanel">
+                <Label Content="Mysql Server Connection" HorizontalAlignment="Center"/>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Button Content="Test Connection" Margin="5" Grid.Column="0"></Button>
-                    <Button Content="Add Connection" Margin="5" Grid.Column="1"></Button>
-                </Grid>
+                <TextBox x:Name="connectionNameTextBox"
+                         adorners:Watermark.Text="Connection Name" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
 
-            </StackPanel>
+                <TextBox x:Name="serverNameTextBox"
+                         adorners:Watermark.Text="Server Name (ip) ex (localhost)" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
 
-            <StackPanel x:Name="lanDatabaseStackPanel" Visibility="Collapsed">
+                <TextBox x:Name="usernameTextBox"
+                         adorners:Watermark.Text="Username" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
 
-                <Label Content="LAN Server" HorizontalAlignment="Center"/>
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-
-                        <RadioButton x:Name="useConnectionStringRadioButton" 
-                         Content="Use Connection String" 
-                         Checked="useConnectionStringRadioButton_Checked"
-                         Grid.Column="0"
-                         Grid.Row="0"
-                         IsChecked="True"
-                         HorizontalAlignment="Center"/>
-                        <RadioButton x:Name="useParametersStringRadioButton" 
-                         Content="Use Parameters" 
-                         Grid.Column="1"
-                         Grid.Row="0"
-                         Checked="useParametersStringRadioButton_Checked"
-                         HorizontalAlignment="Center"/>
-                    </Grid>
-
-                    <TextBox x:Name="lanConnectionStringTextBox" 
-                             adorners:Watermark.Text="Connection String" 
-                             Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Width="330"
-                             Style="{StaticResource connectionTextBox}"/>
-                    <TextBox x:Name="lanConnectionUserTextBox" 
-                             adorners:Watermark.Text="User ID" 
-                             Grid.Row="2" Grid.Column="0"
-                             Style="{StaticResource connectionTextBox}"/>
-                    <PasswordBox x:Name="lanConnectionPasswordBox" 
+                <PasswordBox x:Name="userPasswordPasswordBox"
                              adorners:Watermark.Text="Password" 
-                             Grid.Row="3" Grid.Column="0"
                              Style="{StaticResource connectionPasswordBox}"/>
-                </Grid>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="23*"></ColumnDefinition>
-                        <ColumnDefinition Width="12*"/>
-                        <ColumnDefinition Width="35*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Button Content="Test Connection" Margin="5,5,5,5" Grid.Column="0" Grid.ColumnSpan="2"></Button>
-                    <Button Content="Add Connection" Margin="5,5,5,5" Grid.Column="2"></Button>
-                </Grid>
-
-            </StackPanel>
-
-            <StackPanel x:Name="cloudDatabaseStackPanel" Visibility="Collapsed">
-                <Label Content="Cloud Database" HorizontalAlignment="Center"/>
-
-                <TextBox adorners:Watermark.Text="Account Name" Margin="5" 
-                         Style="{StaticResource connectionTextBox}"/>
-                <TextBox adorners:Watermark.Text="Password" Margin="5" 
-                         Style="{StaticResource connectionTextBox}"/>
-                <TextBox adorners:Watermark.Text="Warehouse" Margin="5" 
-                         Style="{StaticResource connectionTextBox}"/>
-                <TextBox adorners:Watermark.Text="Database Name" Margin="5" 
+                <TextBox x:Name="portNumberTextBox"
+                         adorners:Watermark.Text="Port Number" Margin="5" 
                          Style="{StaticResource connectionTextBox}"/>
 
                 <Grid>
@@ -117,34 +40,11 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button Content="Test Connection" Margin="5" Grid.Column="0"></Button>
-                    <Button Content="Add Connection" Margin="5" Grid.Column="1"></Button>
+                    <Button Content="Add Connection" Margin="5" Grid.Column="1" Click="AddConnectionButton_Click"></Button>
                 </Grid>
             </StackPanel>
         </StackPanel>
 
-        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
 
-            <RadioButton x:Name="localDatabaseRadioButton" 
-                         Content="Local Server" 
-                         Checked="LocalDatabaseRadioButton_Checked"
-                         Grid.Column="0"
-                         Grid.Row="0"
-                         IsChecked="True"/>
-            <RadioButton x:Name="lanDatabaseRadioButton" 
-                         Content="LAN Server" 
-                         Grid.Column="1"
-                         Grid.Row="0"
-                         Checked="LanDatabaseRadioButton_Checked"/>
-            <RadioButton x:Name="cloudDatabaseRadioButton" 
-                         Content="Cloud Server" 
-                         Grid.Column="2"
-                         Grid.Row="0"
-                         Checked="CloudDatabaseRadioButton_Checked"/>
-        </Grid>
     </Grid>
 </Window>
