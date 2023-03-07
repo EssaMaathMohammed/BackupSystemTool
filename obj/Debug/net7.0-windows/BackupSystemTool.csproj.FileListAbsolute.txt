@@ -58,3 +58,7 @@ C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\EditConnec
 C:\Users\study\source\repos\BackupSystemTool\bin\Debug\net7.0-windows\System.Management.dll
 C:\Users\study\source\repos\BackupSystemTool\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Management.dll
 C:\Users\study\source\repos\BackupSystemTool\bin\Debug\net7.0-windows\MySqlConnector.dll
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\AddJobDialog.g.cs
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\JobPage.g.cs
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\AddJobDialog.baml
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\JobPage.baml

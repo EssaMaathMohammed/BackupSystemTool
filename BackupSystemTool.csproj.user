@@ -10,6 +10,9 @@
     <Compile Update="AddConnectionDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="AddJobDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="BackupDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -22,12 +25,18 @@
     <Compile Update="EditConnectionDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="JobPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="RegisterPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="AddConnectionDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="AddJobDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="BackupDialog.xaml">
@@ -43,6 +52,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="EditConnectionDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="JobPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="LoginPage.xaml">

@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\study\source\repos\BackupSystemTool\App.xaml
-8-1178500050
+101980379430
 
-18955077194
+201937712802
 2061398603659
-AddConnectionDialog.xaml;BackupDialog.xaml;ConnectionsPage.xaml;Controls\ConnectionItemControl.xaml;DatabaseTester.xaml;EditConnectionDialog.xaml;LoginPage.xaml;RegisterPage.xaml;
+AddConnectionDialog.xaml;AddJobDialog.xaml;BackupDialog.xaml;ConnectionsPage.xaml;Controls\ConnectionItemControl.xaml;DatabaseTester.xaml;EditConnectionDialog.xaml;JobPage.xaml;LoginPage.xaml;RegisterPage.xaml;
 
 True
 

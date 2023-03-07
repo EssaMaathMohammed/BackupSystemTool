@@ -53,6 +53,8 @@ namespace BackupSystemTool
             connectionsPage.Show();
             this.Close();
         }
+
+        
         private void MysqlConnector_Click(object sender, RoutedEventArgs e)
         {
             MysqlConnector connector = new MysqlConnector();
