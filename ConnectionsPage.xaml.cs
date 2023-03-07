@@ -25,11 +25,11 @@ namespace BackupSystemTool
         public ConnectionsPage()
         {
             InitializeComponent();
-            ReadDatabase();
+            UpdateConnectionList();
         }
 
         // Reading the fields of the database ConnectionItem Table
-        public List<ConnectionItem> ReadDatabase()
+        public static List<ConnectionItem> GetConnectionsList()
         {
             List<ConnectionItem> connectionItems = new List<ConnectionItem>();
             // using with resources, automatically close the connection upon reaching the end of using block
@@ -39,11 +39,14 @@ namespace BackupSystemTool
                 connectionItems = conn.Table<ConnectionItem>().ToList();
             }
 
-            if (connectionItems.Count > 0)
-            {
-                ConnectionsListView.ItemsSource = connectionItems;
-            }
             return connectionItems;
+        }
+
+        public void UpdateConnectionList() {
+            if (GetConnectionsList().Count > 0)
+            {
+                ConnectionsListView.ItemsSource = GetConnectionsList();
+            }
         }
 
         private void addConnection_Click(object sender, RoutedEventArgs e)

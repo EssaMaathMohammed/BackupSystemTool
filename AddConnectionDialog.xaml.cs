@@ -1,4 +1,5 @@
 ﻿using BackupSystemTool.DatabaseClasses;
+using MySqlConnector;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -47,8 +48,41 @@ namespace BackupSystemTool
                 conn.CreateTable<ConnectionItem>();
                 conn.Insert(connectionItem);
             }
-            connectionsPage.ReadDatabase();
+            connectionsPage.UpdateConnectionList();
             this.Close();
         }
+
+        private void testConnectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckMySQLConnection(serverNameTextBox.Text, usernameTextBox.Text, userPasswordPasswordBox.Password, portNumberTextBox.Text))
+            {
+                connectionStatucLabel.Content = "Connection Successful";
+                connectionStatucLabel.Foreground = Brushes.Green;
+            }
+            else
+            {
+                connectionStatucLabel.Content = "Connection Failed";
+                connectionStatucLabel.Foreground = Brushes.Red;
+            }
+            connectionStatucLabel.Visibility = Visibility.Visible;
+        }
+
+        private bool CheckMySQLConnection(string server, string username, string password, string portNumber)
+        {
+            string connectionString = $"Server={server};port={portNumber};Uid={username};Pwd={password};";
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    return true;
+                }
+                catch (MySqlException)
+                {
+                    return false;
+                }
+            }
+        }
+
     }
 }

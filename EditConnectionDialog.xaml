@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BackupSystemTool"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="EditConnectionDialog" Height="160" Width="350">
+        Title="EditConnectionDialog" Height="285" Width="350">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -16,15 +16,35 @@
             <StackPanel x:Name="editConnectionStackPanel">
 
                 <Label Content="Editing Connection" HorizontalAlignment="Center"/>
-                <TextBox x:Name="connectionNameTextBox" adorners:Watermark.Text="Connection Name" Margin="5"/>
-                <TextBox x:Name="connectionServerNameTextBox" adorners:Watermark.Text="Server Name" Margin="5"/>
 
+                <TextBox x:Name="connectionNameTextBox"
+                         adorners:Watermark.Text="Connection Name" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <TextBox x:Name="connectionServerNameTextBox"
+                         adorners:Watermark.Text="Server Name (ip) ex (localhost)" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <TextBox x:Name="usernameTextBox"
+                         adorners:Watermark.Text="Username" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <PasswordBox x:Name="userPasswordPasswordBox"
+                             adorners:Watermark.Text="Password" 
+                             Style="{StaticResource connectionPasswordBox}"/>
+
+                <TextBox x:Name="portNumberTextBox"
+                         adorners:Watermark.Text="Port Number" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <Label x:Name="connectionStatucLabel" Content="Connection Status" Visibility="Collapsed"/>
+                
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Test Connection" Margin="5" Grid.Column="0"/>
+                    <Button Content="Test Connection" Margin="5" Grid.Column="0" Click="testConnectionButton_Click"/>
                     <Button Content="Save Changes" Margin="5" Grid.Column="1" Click="saveChangesButton_Click"/>
                 </Grid>
                 

@@ -1,0 +1,48 @@
+﻿<Window x:Class="BackupSystemTool.AddJobDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BackupSystemTool"
+        xmlns:adorners="http://gu.se/Adorners"
+        mc:Ignorable="d"
+        Title="AddJobDialog" Height="200" Width="225">
+    <Grid>
+        <StackPanel Grid.Column="0">
+
+            <StackPanel x:Name="addJob_StackPanel">
+                <Label Content="Job Information" HorizontalAlignment="Center"/>
+
+                <TextBox x:Name="jobName_TextBox"
+                         adorners:Watermark.Text="Job Name" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <ComboBox x:Name="connectionItemsComboBox" 
+                      Grid.Row="1" Grid.Column="0"
+                      Width="200" Height="23" 
+                      HorizontalAlignment="Left"
+                      Margin="5" 
+                      Text="Host Location">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <ComboBoxItem Content="{Binding ConnectionName}" Foreground="Black"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!--<TextBox x:Name="connectionId_TextBox"
+                         adorners:Watermark.Text="Connection ID (Testing)" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>-->
+
+                <TextBox x:Name="backupLocation_TextBox"
+                         adorners:Watermark.Text="Backup Location" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <Button x:Name="addJobButton" Content="Add Job" Margin="5" Grid.Column="1" Click="addJobButton_Click"></Button>
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

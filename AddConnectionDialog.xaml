@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BackupSystemTool"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="AddConnectionDialog" Height="250" Width="360">
+        Title="AddConnectionDialog" Height="285" Width="360">
     <Grid>
 
         <StackPanel Grid.Column="0">
@@ -34,12 +34,14 @@
                          adorners:Watermark.Text="Port Number" Margin="5" 
                          Style="{StaticResource connectionTextBox}"/>
 
+                <Label x:Name="connectionStatucLabel" Content="Connection Status" Visibility="Collapsed"/>
+
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Test Connection" Margin="5" Grid.Column="0"></Button>
+                    <Button Content="Test Connection" Margin="5" Grid.Column="0" Click="testConnectionButton_Click"></Button>
                     <Button Content="Add Connection" Margin="5" Grid.Column="1" Click="AddConnectionButton_Click"></Button>
                 </Grid>
             </StackPanel>
