@@ -16,6 +16,9 @@
     <Compile Update="BackupDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="BrowseDatabasesDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="ConnectionsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -31,6 +34,9 @@
     <Compile Update="RegisterPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="SnowflakeCloudLocationDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="AddConnectionDialog.xaml">
@@ -40,6 +46,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="BackupDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="BrowseDatabasesDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controls\ConnectionItemControl.xaml">
@@ -61,6 +70,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="RegisterPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SnowflakeCloudLocationDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

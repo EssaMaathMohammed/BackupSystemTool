@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:BackupSystemTool"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="AddJobDialog" Height="200" Width="225">
+        Title="AddJobDialog" Height="220" Width="250">
     <Grid>
-        <StackPanel Grid.Column="0">
+        <StackPanel Grid.Column="0" Margin="0,0,0,29">
 
-            <StackPanel x:Name="addJob_StackPanel">
+            <StackPanel x:Name="addJob_StackPanel" Height="203">
                 <Label Content="Job Information" HorizontalAlignment="Center"/>
 
                 <TextBox x:Name="jobName_TextBox"
@@ -32,15 +32,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <!--<TextBox x:Name="connectionId_TextBox"
-                         adorners:Watermark.Text="Connection ID (Testing)" Margin="5" 
-                         Style="{StaticResource connectionTextBox}"/>-->
-
-                <TextBox x:Name="backupLocation_TextBox"
-                         adorners:Watermark.Text="Backup Location" Margin="5" 
-                         Style="{StaticResource connectionTextBox}"/>
-
-                <Button x:Name="addJobButton" Content="Add Job" Margin="5" Grid.Column="1" Click="addJobButton_Click"></Button>
+                <Button x:Name="addJobButton" Content="Add Job" Margin="5" Grid.Column="1" Click="addJobButton_Click" Width="176"></Button>
 
             </StackPanel>
         </StackPanel>

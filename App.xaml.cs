@@ -15,6 +15,13 @@ namespace BackupSystemTool
     /// </summary>
     public partial class App : Application
     {
+        // Enum List for locations
+        public enum Locations
+        {
+            LocalLocation,
+            LANLocation,
+            Snowflake
+        }
         // Creates a path to the database directory location + Database Name
         static string ApplicationFileName = "BackupSystemTool";
         static string databaseName = "PII.db";
@@ -29,5 +36,6 @@ namespace BackupSystemTool
                 Directory.CreateDirectory(databaseFolderPath);
             }
         }
+
     }   
 }

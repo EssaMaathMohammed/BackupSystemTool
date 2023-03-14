@@ -48,7 +48,6 @@ namespace BackupSystemTool
                 job_name = jobName_TextBox.Text,
                 connection_name = connectionItem.ConnectionName,
                 connection_id = connectionItem.Id,
-                location = backupLocation_TextBox.Text,
             };
 
             // using with resources, automatically close the connection upon reaching the end of using block

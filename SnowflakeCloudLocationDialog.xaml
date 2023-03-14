@@ -1,0 +1,54 @@
+﻿<Window x:Class="BackupSystemTool.SnowflakeCloudLocationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BackupSystemTool"
+        mc:Ignorable="d"
+        xmlns:adorners="http://gu.se/Adorners"
+        Title="SnowflakeCloudLocationDialog"  Height="310" Width="400">
+    <Grid>
+        <StackPanel Grid.Column="0">
+
+            <StackPanel x:Name="snowflakeInformation_StackPanel">
+                <Label Content="Snowflake Location" HorizontalAlignment="Center"/>
+
+                <TextBox x:Name="accountName_TextBox"
+                         adorners:Watermark.Text="Account" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <TextBox x:Name="userName_TextBox"
+                         adorners:Watermark.Text="User" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+
+                <PasswordBox x:Name="password_PasswordBox"
+                             adorners:Watermark.Text="Password" 
+                             Style="{StaticResource connectionPasswordBox}"/>
+
+                <TextBox x:Name="database_TextBox"
+                         adorners:Watermark.Text="Database Name" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <TextBox x:Name="schema_TextBox"
+                         adorners:Watermark.Text="Schema Name" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <TextBox x:Name="warehouse_TextBox"
+                         adorners:Watermark.Text="Warehouse Name" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+                <Label x:Name="connectionStatusLabel" Content="Connection Status" Visibility="Collapsed"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="testConnectionButton" Content="Test Connection" Margin="5" Grid.Column="0" Click="testConnectionButton_Click"></Button>
+                    <Button x:Name="addLocationButton" Content="Add Location" Margin="5" Grid.Column="1" Click="addLocationButton_Click"></Button>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
