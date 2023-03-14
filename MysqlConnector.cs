@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BackupSystemTool
 {
@@ -35,6 +36,7 @@ namespace BackupSystemTool
             List<string> databases = new List<string>();
 
             string connectionString = $"Server={server} ;User Id={userID};Password={password};";
+
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();

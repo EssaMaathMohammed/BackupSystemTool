@@ -9,6 +9,6 @@ namespace BackupSystemTool.DatabaseClasses
         public string job_name { get; set; }
         public string connection_name { get; set; }
         public int connection_id { get; set; }
-        public string location { get; set; }
+        public string location_type { get; set; }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BackupSystemTool"
         mc:Ignorable="d"
-        Title="JobPage" Height="450" Width="800">
+        Title="JobPage" Height="450" Width="950">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -13,37 +13,55 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Row="0" Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="12*"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <ListView x:Name="jobItemsListView"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListView x:Name="jobItemsListView"
                   HorizontalAlignment="Left"
-                  MinWidth="200"
-                  Grid.Row="0">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <EventSetter Event="PreviewMouseLeftButtonUp" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
+                  Grid.Row="0" Margin="0,0,0,48" Grid.RowSpan="2" Width="228"
+                  SelectionChanged="jobItemsListView_SelectionChanged">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text="{Binding job_name}"/>
-                                <TextBlock Text="{Binding connection_name}"/>
-                                <TextBlock Text="{Binding location}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <Button Content="Add Job" Grid.Row="1" Click="AddJobButton_Click"/>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding job_name}" Margin="1"
+                                       Grid.Row="0" Grid.Column="0"/>
+                            <TextBlock Text="{Binding connection_name}" Margin="1" Grid.Row="1" Grid.Column="0"/>
+                            <Button Content="⋮" FontSize="20" FontWeight="Bold" Grid.Row="1" Grid.Column="1" Width="15" Click="optionsButton_Click">
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Delete" Click="deleteJobMenuItem_Click"/>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                            <TextBlock Text="{Binding location_type}" Margin="1" Grid.Row="2" Grid.Column="0"/>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Button Content="Add Job" Grid.Row="1" Click="AddJobButton_Click" Margin="0,0,10,0"/>
         </Grid>
 
-        <Grid x:Name="jobInformation_Grid" Grid.Row="0" Grid.Column="1" Visibility="Visible" Margin="22,17,178,150">
+        <Grid x:Name="jobInformation_Grid" Grid.Row="0" Grid.Column="1" Margin="22,17,38,105" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
@@ -52,34 +70,55 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
+
             <Label Content="Job Name: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
             <TextBox x:Name="jobName_TextBox" 
                      Style="{StaticResource connectionTextBox}"
-                     Grid.Row="0" Grid.Column="1"/>
+                     Grid.Row="0" Grid.Column="1" Width="300"/>
 
             <Label Content="Connection Info: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
             <TextBox x:Name="ConnectionName_TextBox" 
                      Style="{StaticResource connectionTextBox}"
-                     Grid.Row="1" Grid.Column="1"/>
+                     Grid.Row="1" Grid.Column="1" Margin="5,17,0,16" Width="300"/>
+
 
             <Label Content="Select Databases: " Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-            <Button x:Name="BrowseDatabasesButton" 
-                    Content="Browse Databases " 
-                    Click="BrowseDatabasesButton_Click"
-                    Grid.Row="2" Grid.Column="1"
-                    Width="200" Height="30"
-                    HorizontalAlignment="Left" Margin="5,0,62,0"/>
+            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                <TextBox x:Name="relatedDatabases_TextBox" 
+                         Style="{StaticResource connectionTextBox}"
+                         Grid.Row="2" Grid.Column="1" Width="300"/>
 
+                <Button x:Name="BrowseDatabasesButton" 
+                        Content="Browse Databases" 
+                        Click="BrowseDatabasesButton_Click"
+                        Width="100" Height="20"
+                        HorizontalAlignment="Left" Margin="5"/>
+            </StackPanel>
 
             <Label Content="Location: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-            <TextBox x:Name="Location_TextBox" 
-                     Style="{StaticResource connectionTextBox}"
-                     Grid.Row="3" Grid.Column="1"/>
+            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
+                <TextBox x:Name="Location_TextBox" 
+                         Style="{StaticResource connectionTextBox}"
+                         Grid.Row="3" Grid.Column="1" Width="300"/>
+                <Button x:Name="backupLocationOptions"
+                        Content="Select Location" 
+                        Click="backupLocationOptions_Click"
+                        Width="100" Height="20"
+                        HorizontalAlignment="Left" Margin="5">
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Local Path" Click="localLocationMenuOption_Click"/>
+                            <MenuItem Header="LAN Path"/>
+                            <MenuItem Header="Cloud" Click="cloudLocationMenuOption_Click"/>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+            </StackPanel>
 
             <Label Content="Schedule Backup: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
             <TextBox x:Name="ScheduleBackup_TextBox" 
                      Style="{StaticResource connectionTextBox}"
-                     Grid.Row="4" Grid.Column="1"/>
+                     Grid.Row="4" Grid.Column="1" Width="300"/>
 
 
         </Grid>
