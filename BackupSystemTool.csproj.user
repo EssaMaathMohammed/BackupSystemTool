@@ -34,6 +34,9 @@
     <Compile Update="RegisterPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="S3LocationDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="SnowflakeCloudLocationDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -70,6 +73,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="RegisterPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="S3LocationDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="SnowflakeCloudLocationDialog.xaml">

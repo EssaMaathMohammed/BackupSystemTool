@@ -62,7 +62,7 @@ namespace BackupSystemTool {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;component/browsedatabasesdialog.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;V1.0.0.0;component/browsedatabasesdialog.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\BrowseDatabasesDialog.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

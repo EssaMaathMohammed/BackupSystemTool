@@ -1,0 +1,42 @@
+﻿<Window x:Class="BackupSystemTool.S3LocationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BackupSystemTool"
+        mc:Ignorable="d"
+        xmlns:adorners="http://gu.se/Adorners"  Height="250" Width="400"
+        Title="S3LocationDialog">
+    <Grid>
+        <StackPanel x:Name="snowflakeInformation_StackPanel">
+            <Label Content="S3 Location" HorizontalAlignment="Center"/>
+
+            <TextBox x:Name="bucketName_TextBox"
+                         adorners:Watermark.Text="Bucket Name" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+            <TextBox x:Name="region_TextBox"
+                         adorners:Watermark.Text="Region" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+            
+            <TextBox x:Name="accessKey_TextBox"
+                         adorners:Watermark.Text="Access Key" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+            <TextBox x:Name="secretKey_TextBox"
+                         adorners:Watermark.Text="Secret Key" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+
+            <Label x:Name="connectionStatusLabel" Content="Connection Status" Visibility="Collapsed"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="testConnectionButton" Content="Test Connection" Margin="5" Grid.Column="0" Click="testConnectionButton_Click"></Button>
+                <Button x:Name="addLocationButton" Content="Add Location" Margin="5" Grid.Column="1" Click="addLocationButton_Click"></Button>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

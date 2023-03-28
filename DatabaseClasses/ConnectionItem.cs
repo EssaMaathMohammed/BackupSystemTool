@@ -27,6 +27,17 @@ namespace BackupSystemTool.DatabaseClasses
 
         public string PortNumber { get; set; }
 
+        [Ignore]
+        public string DatabaseName { get; set; }
+
+        [Ignore]
+        public string ConnectionString
+        {
+            get
+            {
+                return $"Server={ServerName};Port={PortNumber};Database={DatabaseName};Uid={Username};Pwd={Password};";
+            }
+        }
     }
 
 

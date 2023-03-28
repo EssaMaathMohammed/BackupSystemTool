@@ -1,15 +1,17 @@
-﻿using BackupSystemTool.DatabaseClasses;
-using Microsoft.Win32;
-using MySqlConnector;
+﻿using Amazon.S3.Transfer;
+using Amazon.S3;
+using BackupSystemTool.DatabaseClasses;
 using SQLite;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using static System.Windows.Forms.Design.AxImporter;
+using Amazon;
 
 namespace BackupSystemTool
 {
@@ -149,7 +151,6 @@ namespace BackupSystemTool
             selectedItem = (JobItem)jobItemsListView.SelectedItem;
             if (selectedItem != null)
             {
-
                 // gets the related Connection item using the ID of the selected item
                 using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
                 {
@@ -170,27 +171,47 @@ namespace BackupSystemTool
                     // select the location item from the related table
                     if (locationType.Equals(App.Locations.LocalLocation.ToString()))
                     {
-                        using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
-                        {
-                            conn.CreateTable<LocalLocation>();
-                            List<LocalLocation> itemsList = conn.Table<LocalLocation>().Where(c => c.job_id == selectedItem.id).ToList();
-                            location = "Local Location: " + itemsList[0].local_path;
-                        }
+                        location = "Local Location: " + GetRelatedLocation<string>();
                     }
-                    else if (locationType.Equals(App.Locations.Snowflake.ToString())) {
-                        using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
-                        {
-                            conn.CreateTable<SnowflakeLocation>();
-                            List<SnowflakeLocation> itemsList = conn.Table<SnowflakeLocation>().Where(c => c.job_id == selectedItem.id).ToList();
-                            location = "Snowflake Location: " + itemsList[0].schema + " " + itemsList[0].database;
-                        }
+                    else if (locationType.Equals(App.Locations.S3Location.ToString())) {
+                        location = "S3 Bucket: " + GetRelatedLocation<S3Item>().BucketName;
                     }
-                    
                 }
 
                 // updates the info grid to the info of the selected item
                 UpdateInfoGrid(selectedItem.job_name, selectedItem.connection_name, selectedConnectionItem.ServerName, location, relatedDatabases); ;
             }
+        }
+
+        // gets the backup location of the selected item
+        private T GetRelatedLocation<T>() where T : class
+        {
+            // get the location depending on the location type of the job item
+            if (selectedItem.location_type != null)
+            {
+                string locationType = selectedItem.location_type;
+
+                // select the location item from the related table
+                if (locationType.Equals(App.Locations.LocalLocation.ToString()))
+                {
+                    using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                    {
+                        conn.CreateTable<LocalLocation>();
+                        List<LocalLocation> itemsList = conn.Table<LocalLocation>().Where(c => c.job_id == selectedItem.id).ToList();
+                        return itemsList[0].local_path as T;
+                    }
+                }
+                else if (locationType.Equals(App.Locations.S3Location.ToString()))
+                {
+                    using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                    {
+                        conn.CreateTable<S3Item>();
+                        List<S3Item> itemsList = conn.Table<S3Item>().Where(c => c.JobId == selectedItem.id).ToList();
+                        return itemsList[0] as T;
+                    }
+                }
+            }
+            return null;
         }
 
         // finds the visual parent that is equal to T of the Current Object
@@ -241,7 +262,7 @@ namespace BackupSystemTool
                         conn.CreateTable<JobItem>();
                         conn.Update(selectedItem);
                     }
-
+                    MessageBox.Show(dialog.SelectedPath);
                     // creates a local location object to be inserted based on the path provided by the dialog
                     LocalLocation location = new LocalLocation()
                     {
@@ -263,10 +284,152 @@ namespace BackupSystemTool
             }
         }
 
-        private async void cloudLocationMenuOption_Click(object sender, RoutedEventArgs e)
+        private void cloudLocationMenuOption_Click(object sender, RoutedEventArgs e)
         {
-            SnowflakeCloudLocationDialog locationsDialog = new SnowflakeCloudLocationDialog(this, selectedItem);
+            S3LocationDialog locationsDialog = new S3LocationDialog(this, selectedItem);
             locationsDialog.Show();
+        }
+
+        private void backupNowButton_Click(object sender, RoutedEventArgs e)
+        {
+            // checks if the selected item is not null
+            if (selectedItem != null)
+            {
+                // checks if the job has a database/s that is connected to
+                // gets the database/s as a list of string
+                if (GetRelatedDatabases() != "")
+                {
+                    // checks if the job has a location/s for backup
+                    // gets the location of the backup and sets it as the destination
+                    if (selectedItem.location_type == App.Locations.LocalLocation.ToString())
+                    {
+                        try
+                        {
+                            // get the backup file name and path
+                            string strBackupFileName = GetRelatedLocation<string>();
+
+                            // create a unique name for the backup
+                            string backupFileName = selectedItem.job_name + "_backup_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".sql";
+
+                            // combine the path and unique name of the file
+                            string backupFullPath = Path.Combine(strBackupFileName, backupFileName);
+
+                            // create a new StreamWriter to write the backup file
+                            StreamWriter strBackupFile = new StreamWriter(backupFullPath);
+
+                            // set up the process to execute mysqldump
+                            ProcessStartInfo psInfo = new ProcessStartInfo();
+                            psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mysqldumpbin", "mysqldump.exe");
+                            psInfo.RedirectStandardInput = false;
+                            psInfo.RedirectStandardOutput = false;
+                            psInfo.Arguments = "-u root -h localhost --databases testingdatabase --hex-blob";
+                            psInfo.UseShellExecute = false;
+                            psInfo.RedirectStandardOutput = true;
+
+                            // start the backup process and capture the standard output
+                            Process backup_process = Process.Start(psInfo);
+
+                            // the backup data
+                            string stdout = backup_process.StandardOutput.ReadToEnd();
+
+                            strBackupFile.WriteLine(stdout);
+                            backup_process.WaitForExit();
+
+                            // close the file and the backup process
+                            strBackupFile.Close();
+                            backup_process.Close();
+
+                            // show a message box to indicate the backup is done
+                            MessageBox.Show("Backup done at file:" + strBackupFileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            // show an error message if the backup process fails
+                            MessageBox.Show("Error during the backup: \n\n" + ex.Message);
+                        }
+                    }
+                    else if (selectedItem.location_type == App.Locations.S3Location.ToString())
+                    {
+                        try
+                        {
+                            // get the backup file name and path
+                            S3Item s3Item = GetRelatedLocation<S3Item>();
+
+                            // create a unique name for the backup
+                            string backupFileName = selectedItem.job_name + "_backup_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".sql";
+
+                            // set up the process to execute mysqldump
+                            ProcessStartInfo psInfo = new ProcessStartInfo();
+                            psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mysqldumpbin", "mysqldump.exe");
+                            psInfo.RedirectStandardInput = false;
+                            psInfo.RedirectStandardOutput = false;
+                            psInfo.Arguments = "-u root -h localhost --databases testingdatabase --hex-blob";
+                            psInfo.UseShellExecute = false;
+                            psInfo.RedirectStandardOutput = true;
+
+                            // start the backup process and capture the standard output
+                            Process backup_process = Process.Start(psInfo);
+
+                            // read the backup data from the standard output
+                            string backupData = backup_process.StandardOutput.ReadToEnd();
+
+                            backup_process.WaitForExit();
+
+                            // create a new Amazon S3 client
+                            AmazonS3Client s3Client = new AmazonS3Client(s3Item.AccessKeyId, s3Item.SecretAccessKey, RegionEndpoint.EUCentral1);
+
+                            // create a transfer utility to upload the backup file to the S3 bucket
+                            TransferUtility transferUtility = new TransferUtility(s3Client);
+
+                            // create a transfer request to upload the backup data to the S3 bucket
+                            TransferUtilityUploadRequest transferRequest = new TransferUtilityUploadRequest
+                            {
+                                BucketName = s3Item.BucketName,
+                                Key = backupFileName,
+                                InputStream = new MemoryStream(Encoding.UTF8.GetBytes(backupData)),
+                                CannedACL = S3CannedACL.Private // set the access control to private
+                            };
+
+                            // upload the backup data to the S3 bucket
+                            transferUtility.Upload(transferRequest);
+
+                            // show a message box to indicate the backup is done
+                            MessageBox.Show("Backup done and uploaded to S3 bucket:" + s3Item.BucketName);
+                        }
+                        catch (AmazonS3Exception s3Exception)
+                        {
+                            // show an error message if the S3 upload fails
+                            MessageBox.Show("Error uploading backup to S3: \n\n" + s3Exception.Message);
+                        }
+                        catch (Exception ex)
+                        {
+                            // show an error message if the backup process fails
+                            MessageBox.Show("Error during the backup: \n\n" + ex.Message);
+                        }
+                    }
+                    else if (selectedItem.location_type == null)
+                    {
+                        // show a message if no location is selected for the backup
+                        MessageBox.Show("Please Select a location for the backup");
+                    }
+                }
+                else
+                {
+                    // show a message if no databases are selected for the backup
+                    MessageBox.Show("Please Select Databases to be backed up first.");
+                }
+            }
+            else
+            {
+                // show a message if no job is selected for the backup
+                MessageBox.Show("Please Select an item first to start backup.");
+            }
+        }
+
+
+        private void scheduleBackupButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

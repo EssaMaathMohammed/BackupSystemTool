@@ -3,6 +3,8 @@ using Snowflake.Data.Client;
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,16 +66,19 @@ namespace BackupSystemTool
 
         private void testConnectionButton_Click(object sender, RoutedEventArgs e)
         {
-            // set the inforamtion of the snowflake item
+            // set the information of the snowflake item
             SetSnowflakeItemInforamtion();
             // get the snowflake item connection string
-            string snowflakeConnectionString = GetSnowflakeConnectionString();
+            string snowflakeConnectionString = GetSnowflakeConnectionString()[0];
 
             try
             {
                 using (SnowflakeDbConnection connection = new SnowflakeDbConnection(snowflakeConnectionString))
                 {
                     connection.Open();
+                    var cmd = connection.CreateCommand();
+                    cmd.CommandText = $"SHOW TABLES;";
+                    var reader = cmd.ExecuteReader();
                     connectionStatusLabel.Content = "Connection Successful";
                     connectionStatusLabel.Foreground = Brushes.Green;
                     connectionStatusLabel.Visibility = Visibility.Visible;
@@ -85,7 +90,6 @@ namespace BackupSystemTool
                 connectionStatusLabel.Foreground = Brushes.Red;
                 connectionStatusLabel.Visibility = Visibility.Visible;
             }
-
         }
 
         // sets the information of the snowflake item to the fields
@@ -96,6 +100,7 @@ namespace BackupSystemTool
                 account = accountName_TextBox.Text,
                 user = userName_TextBox.Text,
                 password = password_PasswordBox.Password,
+                role = role_TextBox.Text,
                 database = database_TextBox.Text,
                 schema = schema_TextBox.Text,
                 warehouse = warehouse_TextBox.Text
@@ -103,10 +108,11 @@ namespace BackupSystemTool
         }
 
         // creates a connection string from the snowflake item and return it
-        private string GetSnowflakeConnectionString()
+        private string[] GetSnowflakeConnectionString()
         {
-            string snowflakeConnectionString = $"account={snowflakeLocationItem.account};user={snowflakeLocationItem.user};password={snowflakeLocationItem.password};db={snowflakeLocationItem.database};schema={snowflakeLocationItem.schema};warehouse={snowflakeLocationItem.warehouse};";
-            return snowflakeConnectionString;
+            string snowflakeConnectionString = $"account={snowflakeLocationItem.account};user={snowflakeLocationItem.user};password={snowflakeLocationItem.password};role={snowflakeLocationItem.role};db={snowflakeLocationItem.database};schema={snowflakeLocationItem.schema};";
+            string warehouse = snowflakeLocationItem.warehouse;
+            return new string[] {snowflakeConnectionString, warehouse};
         }
 
     }

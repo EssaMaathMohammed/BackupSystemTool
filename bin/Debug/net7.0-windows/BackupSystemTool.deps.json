@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "BackupSystemTool/1.0.0": {
         "dependencies": {
+          "AWSSDK.Core": "3.7.106.6",
           "Gu.Wpf.Adorners": "2.1.1",
           "MySqlConnector": "2.2.5",
           "Ookii.Dialogs.Wpf": "5.0.1",
@@ -19,17 +20,17 @@
           "BackupSystemTool.dll": {}
         }
       },
-      "AWSSDK.Core/3.7.0.4": {
+      "AWSSDK.Core/3.7.106.6": {
         "runtime": {
           "lib/netcoreapp3.1/AWSSDK.Core.dll": {
             "assemblyVersion": "3.3.0.0",
-            "fileVersion": "3.7.0.4"
+            "fileVersion": "3.7.106.6"
           }
         }
       },
       "AWSSDK.S3/3.7.0.4": {
         "dependencies": {
-          "AWSSDK.Core": "3.7.0.4"
+          "AWSSDK.Core": "3.7.106.6"
         },
         "runtime": {
           "lib/netcoreapp3.1/AWSSDK.S3.dll": {
@@ -524,12 +525,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "AWSSDK.Core/3.7.0.4": {
+    "AWSSDK.Core/3.7.106.6": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-V4bg471WLZ7vitDCv6zxGLz2sp89iTm3bCLpVCnIdC1dKOhP5QYQDe2gZnuMHFFJ1024Bd1IlPuKou412uYAlw==",
-      "path": "awssdk.core/3.7.0.4",
-      "hashPath": "awssdk.core.3.7.0.4.nupkg.sha512"
+      "sha512": "sha512-8s5TQQNR7rAMovVbyvmfMTOTIS4aX0TH7nBB5L8TjJbNngX2LCf3q+MrDO/HffEvzT98ZawUsZQHme2PSUa9Bg==",
+      "path": "awssdk.core/3.7.106.6",
+      "hashPath": "awssdk.core.3.7.106.6.nupkg.sha512"
     },
     "AWSSDK.S3/3.7.0.4": {
       "type": "package",

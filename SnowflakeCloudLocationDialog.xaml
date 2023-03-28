@@ -26,6 +26,10 @@
                              adorners:Watermark.Text="Password" 
                              Style="{StaticResource connectionPasswordBox}"/>
 
+                <TextBox x:Name="role_TextBox"
+                         adorners:Watermark.Text="Role" Margin="5" 
+                         Style="{StaticResource connectionTextBox}"/>
+                
                 <TextBox x:Name="database_TextBox"
                          adorners:Watermark.Text="Database Name" Margin="5" 
                          Style="{StaticResource connectionTextBox}"/>

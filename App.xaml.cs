@@ -20,7 +20,8 @@ namespace BackupSystemTool
         {
             LocalLocation,
             LANLocation,
-            Snowflake
+            Snowflake,
+            S3Location
         }
         // Creates a path to the database directory location + Database Name
         static string ApplicationFileName = "BackupSystemTool";

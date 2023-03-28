@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Vr8wJ8PLiAiF1KuZcGRHEWsJc8b06EU9NNWXmhY5PabgnDgx1jig6EmxR+Zs9P7ZEvGVRgL85jBRYSYn5aEFcg==",
+  "dgSpecHash": "SLLx5/4iNkAgCX1xY56JLs+vX3UBIfK8X6xxwTrEBkC7AgluGleVNN0YSgqmH4nKuLfwuBKabPPvuYWEneCx9A==",
   "success": true,
   "projectFilePath": "C:\\Users\\study\\source\\repos\\BackupSystemTool\\BackupSystemTool.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\study\\.nuget\\packages\\awssdk.core\\3.7.0.4\\awssdk.core.3.7.0.4.nupkg.sha512",
+    "C:\\Users\\study\\.nuget\\packages\\awssdk.core\\3.7.106.6\\awssdk.core.3.7.106.6.nupkg.sha512",
     "C:\\Users\\study\\.nuget\\packages\\awssdk.s3\\3.7.0.4\\awssdk.s3.3.7.0.4.nupkg.sha512",
     "C:\\Users\\study\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\study\\.nuget\\packages\\azure.storage.blobs\\12.13.0\\azure.storage.blobs.12.13.0.nupkg.sha512",
