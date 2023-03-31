@@ -38,7 +38,6 @@ namespace BackupSystemTool
             }
             this.jobPage = jobPage;
         }
-
         private void addJobButton_Click(object sender, RoutedEventArgs e)
         {
             ConnectionItem connectionItem = (ConnectionItem)connectionItemsComboBox.SelectedItem;

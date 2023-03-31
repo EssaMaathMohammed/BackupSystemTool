@@ -1,15 +1,13 @@
-﻿using BackupSystemTool.DatabaseClasses;
-using Microsoft.Win32;
-using MySqlConnector;
+﻿
+using BackupSystemTool.DatabaseClasses;
 using SQLite;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using static System.Windows.Forms.Design.AxImporter;
+using System.Reflection;
+using System.IO;
 
 namespace BackupSystemTool
 {
@@ -21,11 +19,27 @@ namespace BackupSystemTool
 
         private JobItem selectedItem;
         private Button selectedButton;
+        private System.Windows.Forms.NotifyIcon _notifyIcon;
         private ConnectionItem selectedConnectionItem;
         public JobPage()
         {
             InitializeComponent();
+            StartSchedules();
             UpdateJobList();
+
+            // Get the icon file path
+            string basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string relativeIconPath = @"..\..\..\resources\icons\icon-testing-note-book-report-testing-177786230.ico";
+            string absoluteIconPath = Path.GetFullPath(Path.Combine(basePath, relativeIconPath));
+
+            // Initialize the notification icon
+            _notifyIcon = new System.Windows.Forms.NotifyIcon
+            {
+                Icon = new System.Drawing.Icon(absoluteIconPath),
+                Visible = false,
+            };
+            // Add event handler for restoring the app on double-click
+            _notifyIcon.MouseDoubleClick += (s, e) => ShowAndActivate();
         }
 
         private List<JobItem> GetJobList()
@@ -52,12 +66,6 @@ namespace BackupSystemTool
             addJobDialog.ShowDialog();
         }
 
-        // click function that gets called when a list item gets selected
-        private void ListViewItem_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            
-        }
-
         public string GetRelatedDatabases() {
             string relatedDatabases = "";
 
@@ -75,11 +83,69 @@ namespace BackupSystemTool
             return relatedDatabases;
         }
 
-        private void UpdateInfoGrid(string jobName, string connectionName, string serverName, string location, string relatedDatabases) {
+        private void jobItemsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            jobInformation_Grid.Visibility = Visibility.Visible;
+            // clear the fields after every change in selection
+            UpdateInfoGrid("", "", "", "", "", "");
+
+
+            // get the selected item and convert it to a job item
+            selectedItem = (JobItem)jobItemsListView.SelectedItem;
+            if (selectedItem != null)
+            {
+                // gets the related Connection item using the ID of the selected item
+                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                {
+                    conn.CreateTable<JobItem>();
+                    List<ConnectionItem> itemsList = conn.Table<ConnectionItem>().Where(c => c.Id == selectedItem.connection_id).ToList();
+                    selectedConnectionItem = itemsList[0];
+                }
+
+                // gets the related databases to the job
+                string relatedDatabases = GetRelatedDatabases();
+
+                string location = "";
+                // get the location depending on the location type of the job item
+                if (selectedItem.location_type != null)
+                {
+                    string locationType = selectedItem.location_type;
+
+                    // select the location item from the related table
+                    if (locationType.Equals(App.Locations.LocalLocation.ToString()))
+                    {
+                        location = "Local Location: " + GetRelatedLocation<string>();
+                    }
+                    else if (locationType.Equals(App.Locations.S3Location.ToString())) {
+                        location = "S3 Bucket: " + GetRelatedLocation<S3Item>().BucketName;
+                    }
+                }
+
+                string schedule = "";
+                // gets the related Connection item using the ID of the selected item
+                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                {
+                    conn.CreateTable<BackupSchedule>();
+                    List<BackupSchedule> itemsList = conn.Table<BackupSchedule>().Where(c => c.job_id == selectedItem.id).ToList();
+
+                    if (itemsList.Count > 0)
+                    {
+                        schedule = "Every " + itemsList[0].Interval + " " + itemsList[0].IntervalType;
+                    }
+                }
+
+                // updates the info grid to the info of the selected item
+                UpdateInfoGrid(selectedItem.job_name, selectedItem.connection_name,
+                    selectedConnectionItem.ServerName, location, relatedDatabases, schedule); ;
+            }
+        }
+
+        private void UpdateInfoGrid(string jobName, string connectionName, string serverName, string location, string relatedDatabases, string schedule) {
             jobName_TextBox.Text = jobName;
             ConnectionName_TextBox.Text = connectionName + ", " + serverName;
             Location_TextBox.Text = location;
             relatedDatabases_TextBox.Text = relatedDatabases;
+            ScheduleBackup_TextBox.Text = schedule;
         }
 
         private void BrowseDatabasesButton_Click(object sender, RoutedEventArgs e)
@@ -134,63 +200,39 @@ namespace BackupSystemTool
 
                 // update the table
                 UpdateJobList();
-                UpdateInfoGrid("", "", "", "", "");
+                UpdateInfoGrid("", "", "", "", "", "");
             }
         }
 
-        private void jobItemsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        // gets the backup location of the selected item
+        private T GetRelatedLocation<T>() where T : class
         {
-            jobInformation_Grid.Visibility = Visibility.Visible;
-            // clear the fields after every change in selection
-            UpdateInfoGrid("", "", "", "", "");
-
-
-            // get the selected item and convert it to a job item
-            selectedItem = (JobItem)jobItemsListView.SelectedItem;
-            if (selectedItem != null)
+            // get the location depending on the location type of the job item
+            if (selectedItem.location_type != null)
             {
+                string locationType = selectedItem.location_type;
 
-                // gets the related Connection item using the ID of the selected item
-                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                // select the location item from the related table
+                if (locationType.Equals(App.Locations.LocalLocation.ToString()))
                 {
-                    conn.CreateTable<JobItem>();
-                    List<ConnectionItem> itemsList = conn.Table<ConnectionItem>().Where(c => c.Id == selectedItem.connection_id).ToList();
-                    selectedConnectionItem = itemsList[0];
-                }
-
-                // gets the related databases to the job
-                string relatedDatabases = GetRelatedDatabases();
-
-                string location = "";
-                // get the location depending on the location type of the job item
-                if (selectedItem.location_type != null)
-                {
-                    string locationType = selectedItem.location_type;
-
-                    // select the location item from the related table
-                    if (locationType.Equals(App.Locations.LocalLocation.ToString()))
+                    using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
                     {
-                        using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
-                        {
-                            conn.CreateTable<LocalLocation>();
-                            List<LocalLocation> itemsList = conn.Table<LocalLocation>().Where(c => c.job_id == selectedItem.id).ToList();
-                            location = "Local Location: " + itemsList[0].local_path;
-                        }
+                        conn.CreateTable<LocalLocation>();
+                        List<LocalLocation> itemsList = conn.Table<LocalLocation>().Where(c => c.job_id == selectedItem.id).ToList();
+                        return itemsList[0].local_path as T;
                     }
-                    else if (locationType.Equals(App.Locations.Snowflake.ToString())) {
-                        using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
-                        {
-                            conn.CreateTable<SnowflakeLocation>();
-                            List<SnowflakeLocation> itemsList = conn.Table<SnowflakeLocation>().Where(c => c.job_id == selectedItem.id).ToList();
-                            location = "Snowflake Location: " + itemsList[0].schema + " " + itemsList[0].database;
-                        }
-                    }
-                    
                 }
-
-                // updates the info grid to the info of the selected item
-                UpdateInfoGrid(selectedItem.job_name, selectedItem.connection_name, selectedConnectionItem.ServerName, location, relatedDatabases); ;
+                else if (locationType.Equals(App.Locations.S3Location.ToString()))
+                {
+                    using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                    {
+                        conn.CreateTable<S3Item>();
+                        List<S3Item> itemsList = conn.Table<S3Item>().Where(c => c.JobId == selectedItem.id).ToList();
+                        return itemsList[0] as T;
+                    }
+                }
             }
+            return null;
         }
 
         // finds the visual parent that is equal to T of the Current Object
@@ -241,7 +283,7 @@ namespace BackupSystemTool
                         conn.CreateTable<JobItem>();
                         conn.Update(selectedItem);
                     }
-
+                    MessageBox.Show(dialog.SelectedPath);
                     // creates a local location object to be inserted based on the path provided by the dialog
                     LocalLocation location = new LocalLocation()
                     {
@@ -263,10 +305,145 @@ namespace BackupSystemTool
             }
         }
 
-        private async void cloudLocationMenuOption_Click(object sender, RoutedEventArgs e)
+        private void cloudLocationMenuOption_Click(object sender, RoutedEventArgs e)
         {
-            SnowflakeCloudLocationDialog locationsDialog = new SnowflakeCloudLocationDialog(this, selectedItem);
+            S3LocationDialog locationsDialog = new S3LocationDialog(this, selectedItem);
             locationsDialog.Show();
+        }
+
+        // starts the backup operation
+        private void backupNowButton_Click(object sender, RoutedEventArgs e)
+        {
+            // checks if the selected item is not null
+            if (selectedItem != null)
+            {
+                BackupManager backupManager = new BackupManager(selectedItem);
+                // checks if the job has a database/s that is connected to
+                // gets the database/s as a list of string
+                if (GetRelatedDatabases() != "")
+                {
+                    // checks if the job has a location/s for backup
+                    // gets the location of the backup and sets it as the destination
+                    if (selectedItem.location_type == App.Locations.LocalLocation.ToString())
+                    {
+                        backupManager.BackupToLocalLocation("testingdatabase");
+                    }
+                    else if (selectedItem.location_type == App.Locations.S3Location.ToString())
+                    {
+                        backupManager.BackupToS3Bucket("testingdatabase");
+                    }
+                    else if (selectedItem.location_type == null)
+                    {
+                        // show a message if no location is selected for the backup
+                        MessageBox.Show("Please Select a location for the backup");
+                    }
+                }
+                else
+                {
+                    // show a message if no databases are selected for the backup
+                    MessageBox.Show("Please Select Databases to be backed up first.");
+                }
+            }
+            else
+            {
+                // show a message if no job is selected for the backup
+                MessageBox.Show("Please Select an item first to start backup.");
+            }
+        }
+
+        // opens InsertScheduleDialog to create a new Schedule
+        private void scheduleBackupButton_Click(object sender, RoutedEventArgs e)
+        {
+            // checks if the selected item is not null
+            if (selectedItem != null)
+            {
+                // gets the database/s as a list of string
+                if (GetRelatedDatabases() != "")
+                {
+                    InsertScheduleDialog insertScheduleDialog = new InsertScheduleDialog(this, selectedItem); insertScheduleDialog.Show();
+                }
+                else
+                {
+                    // show a message if no databases are selected for the backup
+                    MessageBox.Show("Please Select Databases to be backed up first.");
+                }
+            }
+            else
+            {
+                // show a message if no job is selected for the backup
+                MessageBox.Show("Please Select an item first to start backup.");
+            }
+        }
+
+        // this function needs to be moved from this page to after the login operation of the user
+        private void StartSchedules()
+        {
+            // get a list of all the job items
+            List<JobItem> jobItems;
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<JobItem>();
+                jobItems = conn.Table<JobItem>().ToList();
+            }
+
+            // for each job item start select the schedules related to them and start scheduling them
+            foreach (JobItem jobItem in jobItems)
+            {
+                // create a schedule manager to add the schedules
+                BackupScheduleManager scheduleManager = new BackupScheduleManager(null,jobItem);
+
+                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                {
+                    conn.CreateTable<BackupSchedule>();
+                    List<BackupSchedule> jobSchedules = conn.Table<BackupSchedule>().Where(schd => schd.job_id == jobItem.id).ToList();
+
+                    // for each schedule related to the job (each job may have multiple schedules)
+                    // we need to add it to the timer list and start it
+                    foreach (BackupSchedule backupSchedule in jobSchedules)
+                    {
+                        scheduleManager.AddSchedule(backupSchedule);
+                    }
+                }
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Show the custom closing dialog
+            var closeDialog = new ClosingDialog();
+            closeDialog.ShowDialog();
+
+            // Get the user's choice from the dialog
+            ClosingDialog.UserChoice result = closeDialog.Choice;
+
+            // Perform action based on the user's choice
+            switch (result)
+            {
+                case ClosingDialog.UserChoice.Close:
+                    _notifyIcon.Dispose(); // Dispose of the notification icon resources
+                    break;
+                case ClosingDialog.UserChoice.RunInBackground:
+                    Hide(); // Hide the main window
+                    _notifyIcon.Visible = true; // Show the notification icon
+                    e.Cancel = true; // Cancel the closing event
+                    break;
+                case ClosingDialog.UserChoice.Cancel:
+                    e.Cancel = true; // Cancel the closing event
+                    break;
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            _notifyIcon.Dispose(); // Dispose of the notification icon resources when the window is closed
+        }
+
+        private void ShowAndActivate()
+        {
+            Show(); // Show the main window
+            WindowState = WindowState.Normal; // Set the window state to normal
+            Activate(); // Activate the window to bring it to the top and give it focus
+            _notifyIcon.Visible = false; // Hide the notification icon
         }
     }
 }

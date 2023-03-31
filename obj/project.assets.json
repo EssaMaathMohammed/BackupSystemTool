@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0-windows7.0": {
-      "AWSSDK.Core/3.7.0.4": {
+      "AWSSDK.Core/3.7.106.6": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.1/AWSSDK.Core.dll": {
@@ -846,15 +846,15 @@
     }
   },
   "libraries": {
-    "AWSSDK.Core/3.7.0.4": {
-      "sha512": "V4bg471WLZ7vitDCv6zxGLz2sp89iTm3bCLpVCnIdC1dKOhP5QYQDe2gZnuMHFFJ1024Bd1IlPuKou412uYAlw==",
+    "AWSSDK.Core/3.7.106.6": {
+      "sha512": "8s5TQQNR7rAMovVbyvmfMTOTIS4aX0TH7nBB5L8TjJbNngX2LCf3q+MrDO/HffEvzT98ZawUsZQHme2PSUa9Bg==",
       "type": "package",
-      "path": "awssdk.core/3.7.0.4",
+      "path": "awssdk.core/3.7.106.6",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "awssdk.core.3.7.0.4.nupkg.sha512",
+        "awssdk.core.3.7.106.6.nupkg.sha512",
         "awssdk.core.nuspec",
         "lib/net35/AWSSDK.Core.dll",
         "lib/net35/AWSSDK.Core.pdb",
@@ -2288,6 +2288,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0-windows7.0": [
+      "AWSSDK.Core >= 3.7.106.6",
       "Gu.Wpf.Adorners >= 2.1.1",
       "MySqlConnector >= 2.2.5",
       "Ookii.Dialogs.Wpf >= 5.0.1",
@@ -2335,6 +2336,10 @@
       "net7.0-windows7.0": {
         "targetAlias": "net7.0-windows",
         "dependencies": {
+          "AWSSDK.Core": {
+            "target": "Package",
+            "version": "[3.7.106.6, )"
+          },
           "Gu.Wpf.Adorners": {
             "target": "Package",
             "version": "[2.1.1, )"
