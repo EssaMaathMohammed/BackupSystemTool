@@ -19,6 +19,9 @@
     <Compile Update="BrowseDatabasesDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="ClosingDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="ConnectionsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -26,6 +29,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="EditConnectionDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="InsertScheduleDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="JobPage.xaml.cs">
@@ -54,6 +60,9 @@
     <Page Update="BrowseDatabasesDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="ClosingDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Controls\ConnectionItemControl.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -64,6 +73,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="EditConnectionDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="InsertScheduleDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="JobPage.xaml">

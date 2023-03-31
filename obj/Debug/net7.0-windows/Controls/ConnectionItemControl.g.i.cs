@@ -86,7 +86,7 @@ namespace BackupSystemTool.Controls {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;V1.0.0.0;component/controls/connectionitemcontrol.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;component/controls/connectionitemcontrol.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Controls\ConnectionItemControl.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

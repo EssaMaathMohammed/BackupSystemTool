@@ -96,3 +96,7 @@ C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BackupSyst
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ref\BackupSystemTool.dll
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\S3LocationDialog.g.cs
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\S3LocationDialog.baml
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\InsertScheduleDialog.g.cs
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\InsertScheduleDialog.baml
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ClosingDialog.baml
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ClosingDialog.g.cs

@@ -1,17 +1,13 @@
-﻿using Amazon.S3.Transfer;
-using Amazon.S3;
+﻿
 using BackupSystemTool.DatabaseClasses;
 using SQLite;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Amazon;
+using System.Reflection;
+using System.IO;
 
 namespace BackupSystemTool
 {
@@ -23,11 +19,27 @@ namespace BackupSystemTool
 
         private JobItem selectedItem;
         private Button selectedButton;
+        private System.Windows.Forms.NotifyIcon _notifyIcon;
         private ConnectionItem selectedConnectionItem;
         public JobPage()
         {
             InitializeComponent();
+            StartSchedules();
             UpdateJobList();
+
+            // Get the icon file path
+            string basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string relativeIconPath = @"..\..\..\resources\icons\icon-testing-note-book-report-testing-177786230.ico";
+            string absoluteIconPath = Path.GetFullPath(Path.Combine(basePath, relativeIconPath));
+
+            // Initialize the notification icon
+            _notifyIcon = new System.Windows.Forms.NotifyIcon
+            {
+                Icon = new System.Drawing.Icon(absoluteIconPath),
+                Visible = false,
+            };
+            // Add event handler for restoring the app on double-click
+            _notifyIcon.MouseDoubleClick += (s, e) => ShowAndActivate();
         }
 
         private List<JobItem> GetJobList()
@@ -54,12 +66,6 @@ namespace BackupSystemTool
             addJobDialog.ShowDialog();
         }
 
-        // click function that gets called when a list item gets selected
-        private void ListViewItem_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            
-        }
-
         public string GetRelatedDatabases() {
             string relatedDatabases = "";
 
@@ -77,11 +83,69 @@ namespace BackupSystemTool
             return relatedDatabases;
         }
 
-        private void UpdateInfoGrid(string jobName, string connectionName, string serverName, string location, string relatedDatabases) {
+        private void jobItemsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            jobInformation_Grid.Visibility = Visibility.Visible;
+            // clear the fields after every change in selection
+            UpdateInfoGrid("", "", "", "", "", "");
+
+
+            // get the selected item and convert it to a job item
+            selectedItem = (JobItem)jobItemsListView.SelectedItem;
+            if (selectedItem != null)
+            {
+                // gets the related Connection item using the ID of the selected item
+                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                {
+                    conn.CreateTable<JobItem>();
+                    List<ConnectionItem> itemsList = conn.Table<ConnectionItem>().Where(c => c.Id == selectedItem.connection_id).ToList();
+                    selectedConnectionItem = itemsList[0];
+                }
+
+                // gets the related databases to the job
+                string relatedDatabases = GetRelatedDatabases();
+
+                string location = "";
+                // get the location depending on the location type of the job item
+                if (selectedItem.location_type != null)
+                {
+                    string locationType = selectedItem.location_type;
+
+                    // select the location item from the related table
+                    if (locationType.Equals(App.Locations.LocalLocation.ToString()))
+                    {
+                        location = "Local Location: " + GetRelatedLocation<string>();
+                    }
+                    else if (locationType.Equals(App.Locations.S3Location.ToString())) {
+                        location = "S3 Bucket: " + GetRelatedLocation<S3Item>().BucketName;
+                    }
+                }
+
+                string schedule = "";
+                // gets the related Connection item using the ID of the selected item
+                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                {
+                    conn.CreateTable<BackupSchedule>();
+                    List<BackupSchedule> itemsList = conn.Table<BackupSchedule>().Where(c => c.job_id == selectedItem.id).ToList();
+
+                    if (itemsList.Count > 0)
+                    {
+                        schedule = "Every " + itemsList[0].Interval + " " + itemsList[0].IntervalType;
+                    }
+                }
+
+                // updates the info grid to the info of the selected item
+                UpdateInfoGrid(selectedItem.job_name, selectedItem.connection_name,
+                    selectedConnectionItem.ServerName, location, relatedDatabases, schedule); ;
+            }
+        }
+
+        private void UpdateInfoGrid(string jobName, string connectionName, string serverName, string location, string relatedDatabases, string schedule) {
             jobName_TextBox.Text = jobName;
             ConnectionName_TextBox.Text = connectionName + ", " + serverName;
             Location_TextBox.Text = location;
             relatedDatabases_TextBox.Text = relatedDatabases;
+            ScheduleBackup_TextBox.Text = schedule;
         }
 
         private void BrowseDatabasesButton_Click(object sender, RoutedEventArgs e)
@@ -136,50 +200,7 @@ namespace BackupSystemTool
 
                 // update the table
                 UpdateJobList();
-                UpdateInfoGrid("", "", "", "", "");
-            }
-        }
-
-        private void jobItemsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            jobInformation_Grid.Visibility = Visibility.Visible;
-            // clear the fields after every change in selection
-            UpdateInfoGrid("", "", "", "", "");
-
-
-            // get the selected item and convert it to a job item
-            selectedItem = (JobItem)jobItemsListView.SelectedItem;
-            if (selectedItem != null)
-            {
-                // gets the related Connection item using the ID of the selected item
-                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
-                {
-                    conn.CreateTable<JobItem>();
-                    List<ConnectionItem> itemsList = conn.Table<ConnectionItem>().Where(c => c.Id == selectedItem.connection_id).ToList();
-                    selectedConnectionItem = itemsList[0];
-                }
-
-                // gets the related databases to the job
-                string relatedDatabases = GetRelatedDatabases();
-
-                string location = "";
-                // get the location depending on the location type of the job item
-                if (selectedItem.location_type != null)
-                {
-                    string locationType = selectedItem.location_type;
-
-                    // select the location item from the related table
-                    if (locationType.Equals(App.Locations.LocalLocation.ToString()))
-                    {
-                        location = "Local Location: " + GetRelatedLocation<string>();
-                    }
-                    else if (locationType.Equals(App.Locations.S3Location.ToString())) {
-                        location = "S3 Bucket: " + GetRelatedLocation<S3Item>().BucketName;
-                    }
-                }
-
-                // updates the info grid to the info of the selected item
-                UpdateInfoGrid(selectedItem.job_name, selectedItem.connection_name, selectedConnectionItem.ServerName, location, relatedDatabases); ;
+                UpdateInfoGrid("", "", "", "", "", "");
             }
         }
 
@@ -290,11 +311,13 @@ namespace BackupSystemTool
             locationsDialog.Show();
         }
 
+        // starts the backup operation
         private void backupNowButton_Click(object sender, RoutedEventArgs e)
         {
             // checks if the selected item is not null
             if (selectedItem != null)
             {
+                BackupManager backupManager = new BackupManager(selectedItem);
                 // checks if the job has a database/s that is connected to
                 // gets the database/s as a list of string
                 if (GetRelatedDatabases() != "")
@@ -303,109 +326,11 @@ namespace BackupSystemTool
                     // gets the location of the backup and sets it as the destination
                     if (selectedItem.location_type == App.Locations.LocalLocation.ToString())
                     {
-                        try
-                        {
-                            // get the backup file name and path
-                            string strBackupFileName = GetRelatedLocation<string>();
-
-                            // create a unique name for the backup
-                            string backupFileName = selectedItem.job_name + "_backup_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".sql";
-
-                            // combine the path and unique name of the file
-                            string backupFullPath = Path.Combine(strBackupFileName, backupFileName);
-
-                            // create a new StreamWriter to write the backup file
-                            StreamWriter strBackupFile = new StreamWriter(backupFullPath);
-
-                            // set up the process to execute mysqldump
-                            ProcessStartInfo psInfo = new ProcessStartInfo();
-                            psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mysqldumpbin", "mysqldump.exe");
-                            psInfo.RedirectStandardInput = false;
-                            psInfo.RedirectStandardOutput = false;
-                            psInfo.Arguments = "-u root -h localhost --databases testingdatabase --hex-blob";
-                            psInfo.UseShellExecute = false;
-                            psInfo.RedirectStandardOutput = true;
-
-                            // start the backup process and capture the standard output
-                            Process backup_process = Process.Start(psInfo);
-
-                            // the backup data
-                            string stdout = backup_process.StandardOutput.ReadToEnd();
-
-                            strBackupFile.WriteLine(stdout);
-                            backup_process.WaitForExit();
-
-                            // close the file and the backup process
-                            strBackupFile.Close();
-                            backup_process.Close();
-
-                            // show a message box to indicate the backup is done
-                            MessageBox.Show("Backup done at file:" + strBackupFileName);
-                        }
-                        catch (Exception ex)
-                        {
-                            // show an error message if the backup process fails
-                            MessageBox.Show("Error during the backup: \n\n" + ex.Message);
-                        }
+                        backupManager.BackupToLocalLocation("testingdatabase");
                     }
                     else if (selectedItem.location_type == App.Locations.S3Location.ToString())
                     {
-                        try
-                        {
-                            // get the backup file name and path
-                            S3Item s3Item = GetRelatedLocation<S3Item>();
-
-                            // create a unique name for the backup
-                            string backupFileName = selectedItem.job_name + "_backup_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".sql";
-
-                            // set up the process to execute mysqldump
-                            ProcessStartInfo psInfo = new ProcessStartInfo();
-                            psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mysqldumpbin", "mysqldump.exe");
-                            psInfo.RedirectStandardInput = false;
-                            psInfo.RedirectStandardOutput = false;
-                            psInfo.Arguments = "-u root -h localhost --databases testingdatabase --hex-blob";
-                            psInfo.UseShellExecute = false;
-                            psInfo.RedirectStandardOutput = true;
-
-                            // start the backup process and capture the standard output
-                            Process backup_process = Process.Start(psInfo);
-
-                            // read the backup data from the standard output
-                            string backupData = backup_process.StandardOutput.ReadToEnd();
-
-                            backup_process.WaitForExit();
-
-                            // create a new Amazon S3 client
-                            AmazonS3Client s3Client = new AmazonS3Client(s3Item.AccessKeyId, s3Item.SecretAccessKey, RegionEndpoint.EUCentral1);
-
-                            // create a transfer utility to upload the backup file to the S3 bucket
-                            TransferUtility transferUtility = new TransferUtility(s3Client);
-
-                            // create a transfer request to upload the backup data to the S3 bucket
-                            TransferUtilityUploadRequest transferRequest = new TransferUtilityUploadRequest
-                            {
-                                BucketName = s3Item.BucketName,
-                                Key = backupFileName,
-                                InputStream = new MemoryStream(Encoding.UTF8.GetBytes(backupData)),
-                                CannedACL = S3CannedACL.Private // set the access control to private
-                            };
-
-                            // upload the backup data to the S3 bucket
-                            transferUtility.Upload(transferRequest);
-
-                            // show a message box to indicate the backup is done
-                            MessageBox.Show("Backup done and uploaded to S3 bucket:" + s3Item.BucketName);
-                        }
-                        catch (AmazonS3Exception s3Exception)
-                        {
-                            // show an error message if the S3 upload fails
-                            MessageBox.Show("Error uploading backup to S3: \n\n" + s3Exception.Message);
-                        }
-                        catch (Exception ex)
-                        {
-                            // show an error message if the backup process fails
-                            MessageBox.Show("Error during the backup: \n\n" + ex.Message);
-                        }
+                        backupManager.BackupToS3Bucket("testingdatabase");
                     }
                     else if (selectedItem.location_type == null)
                     {
@@ -426,10 +351,99 @@ namespace BackupSystemTool
             }
         }
 
-
+        // opens InsertScheduleDialog to create a new Schedule
         private void scheduleBackupButton_Click(object sender, RoutedEventArgs e)
         {
+            // checks if the selected item is not null
+            if (selectedItem != null)
+            {
+                // gets the database/s as a list of string
+                if (GetRelatedDatabases() != "")
+                {
+                    InsertScheduleDialog insertScheduleDialog = new InsertScheduleDialog(this, selectedItem); insertScheduleDialog.Show();
+                }
+                else
+                {
+                    // show a message if no databases are selected for the backup
+                    MessageBox.Show("Please Select Databases to be backed up first.");
+                }
+            }
+            else
+            {
+                // show a message if no job is selected for the backup
+                MessageBox.Show("Please Select an item first to start backup.");
+            }
+        }
 
+        // this function needs to be moved from this page to after the login operation of the user
+        private void StartSchedules()
+        {
+            // get a list of all the job items
+            List<JobItem> jobItems;
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<JobItem>();
+                jobItems = conn.Table<JobItem>().ToList();
+            }
+
+            // for each job item start select the schedules related to them and start scheduling them
+            foreach (JobItem jobItem in jobItems)
+            {
+                // create a schedule manager to add the schedules
+                BackupScheduleManager scheduleManager = new BackupScheduleManager(null,jobItem);
+
+                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                {
+                    conn.CreateTable<BackupSchedule>();
+                    List<BackupSchedule> jobSchedules = conn.Table<BackupSchedule>().Where(schd => schd.job_id == jobItem.id).ToList();
+
+                    // for each schedule related to the job (each job may have multiple schedules)
+                    // we need to add it to the timer list and start it
+                    foreach (BackupSchedule backupSchedule in jobSchedules)
+                    {
+                        scheduleManager.AddSchedule(backupSchedule);
+                    }
+                }
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Show the custom closing dialog
+            var closeDialog = new ClosingDialog();
+            closeDialog.ShowDialog();
+
+            // Get the user's choice from the dialog
+            ClosingDialog.UserChoice result = closeDialog.Choice;
+
+            // Perform action based on the user's choice
+            switch (result)
+            {
+                case ClosingDialog.UserChoice.Close:
+                    _notifyIcon.Dispose(); // Dispose of the notification icon resources
+                    break;
+                case ClosingDialog.UserChoice.RunInBackground:
+                    Hide(); // Hide the main window
+                    _notifyIcon.Visible = true; // Show the notification icon
+                    e.Cancel = true; // Cancel the closing event
+                    break;
+                case ClosingDialog.UserChoice.Cancel:
+                    e.Cancel = true; // Cancel the closing event
+                    break;
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            _notifyIcon.Dispose(); // Dispose of the notification icon resources when the window is closed
+        }
+
+        private void ShowAndActivate()
+        {
+            Show(); // Show the main window
+            WindowState = WindowState.Normal; // Set the window state to normal
+            Activate(); // Activate the window to bring it to the top and give it focus
+            _notifyIcon.Visible = false; // Hide the notification icon
         }
     }
 }

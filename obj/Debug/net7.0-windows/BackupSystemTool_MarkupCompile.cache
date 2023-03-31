@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\study\source\repos\BackupSystemTool\App.xaml
-13-1022574740
+152033153206
 
-25-1810566100
+302074035799
 242496826001
-AddConnectionDialog.xaml;AddJobDialog.xaml;BackupDialog.xaml;BrowseDatabasesDialog.xaml;ConnectionsPage.xaml;Controls\ConnectionItemControl.xaml;DatabaseTester.xaml;EditConnectionDialog.xaml;JobPage.xaml;LoginPage.xaml;RegisterPage.xaml;S3LocationDialog.xaml;SnowflakeCloudLocationDialog.xaml;
+AddConnectionDialog.xaml;AddJobDialog.xaml;BackupDialog.xaml;BrowseDatabasesDialog.xaml;ClosingDialog.xaml;ConnectionsPage.xaml;Controls\ConnectionItemControl.xaml;DatabaseTester.xaml;EditConnectionDialog.xaml;InsertScheduleDialog.xaml;JobPage.xaml;LoginPage.xaml;RegisterPage.xaml;S3LocationDialog.xaml;SnowflakeCloudLocationDialog.xaml;
 
 False
 

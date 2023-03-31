@@ -143,7 +143,7 @@ namespace BackupSystemTool {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;V1.0.0.0;component/snowflakecloudlocationdialog.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;component/snowflakecloudlocationdialog.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\SnowflakeCloudLocationDialog.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
