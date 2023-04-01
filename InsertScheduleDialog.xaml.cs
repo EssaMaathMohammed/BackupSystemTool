@@ -63,7 +63,7 @@ namespace BackupSystemTool
                     {
                         conn.CreateTable<BackupSchedule>();
                         List<BackupSchedule> scheduleList = conn.Table<BackupSchedule>().Where(item => item.DatabaseName.Equals(schedule.DatabaseName) && item.job_id == schedule.job_id).ToList();
-                        if (scheduleList != null) { 
+                        if (scheduleList.Count > 0) { 
                             existingSchedule = scheduleList[0];
                             // give the schelde the new info
                             existingSchedule.IntervalType = schedule.IntervalType;
