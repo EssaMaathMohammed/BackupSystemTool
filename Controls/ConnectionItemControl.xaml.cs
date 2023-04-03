@@ -25,6 +25,7 @@ namespace BackupSystemTool.Controls
     public partial class ConnectionItemControl : UserControl
     {
         bool expansionStatus = false;
+        
         /// <summary>
         /// The Dependency Propoerty is the ConnectionItem bind from the xaml side
         /// the Property Metadata(default, custom) works as an event listener, whenever a change 
@@ -34,6 +35,12 @@ namespace BackupSystemTool.Controls
         {
             get { return (ConnectionItem)GetValue(ConnectionItemProperty); }
             set { SetValue(ConnectionItemProperty, value); }
+        }
+
+        public ConnectionItemControl()
+        {
+            InitializeComponent();
+            this.Height = 30;
         }
 
         // Using a DependencyProperty as the backing store for ConnectionItem.
@@ -55,12 +62,6 @@ namespace BackupSystemTool.Controls
                 Debug.WriteLine(e.NewValue.ToString());
 
             }
-        }
-
-        public ConnectionItemControl()
-        {
-            InitializeComponent();
-            this.Height = 30;
         }
 
         private void expandButton_Click(object sender, RoutedEventArgs e)

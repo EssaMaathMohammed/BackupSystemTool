@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackupSystemTool.DatabaseClasses
 {
-    internal class JobDatabases
+    public class JobDatabases
     {
         [PrimaryKey, AutoIncrement]
         public int id { get; set; }

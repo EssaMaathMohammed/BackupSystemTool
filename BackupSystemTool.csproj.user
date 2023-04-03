@@ -25,6 +25,9 @@
     <Compile Update="ConnectionsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Controls\JobDatabaseUserControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="DatabaseTester.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -67,6 +70,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="ConnectionsPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\JobDatabaseUserControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="DatabaseTester.xaml">

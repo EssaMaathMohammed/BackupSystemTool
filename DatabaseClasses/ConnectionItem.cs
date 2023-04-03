@@ -18,7 +18,6 @@ namespace BackupSystemTool.DatabaseClasses
         [MaxLength(50)]
         public string Username { get; set; }
 
-
         [MaxLength(50)]
         public string Password { get; set; }
 
@@ -28,14 +27,11 @@ namespace BackupSystemTool.DatabaseClasses
         public string PortNumber { get; set; }
 
         [Ignore]
-        public string DatabaseName { get; set; }
-
-        [Ignore]
         public string ConnectionString
         {
             get
             {
-                return $"Server={ServerName};Port={PortNumber};Database={DatabaseName};Uid={Username};Pwd={Password};";
+                return $"Server={ServerName};Port={PortNumber};Uid={Username};Pwd={Password};";
             }
         }
     }

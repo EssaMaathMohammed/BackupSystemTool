@@ -100,3 +100,5 @@ C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\InsertSche
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\InsertScheduleDialog.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ClosingDialog.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ClosingDialog.g.cs
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\Controls\JobDatabaseUserControl.g.cs
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\Controls\JobDatabaseUserControl.baml
