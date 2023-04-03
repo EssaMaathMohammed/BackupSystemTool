@@ -24,7 +24,8 @@ namespace BackupSystemTool
         JobPage jobPage;
         JobItem selectedItem;
         ConnectionItem selectedConnectionItem;
-
+        List<string> originalSelectedDatabases = new List<string>();
+        public static List<string> selectedDatabases = new List<string>();
 
         public BrowseDatabasesDialog(JobPage jobPage, JobItem selectedItem, ConnectionItem selectedConnectionItem)
         {
@@ -32,9 +33,12 @@ namespace BackupSystemTool
             this.selectedConnectionItem = selectedConnectionItem;
             this.selectedItem = selectedItem;
             this.jobPage = jobPage;
+            // loads the selected database into both litsts original and selected
+            LoadSelectedDatabasesList();
+            // loads all the databases realte to the mysql server
             UpdateDatabasesList();
         }
-
+       
         public List<string> GetDatabases() {
             MysqlConnector connector = new MysqlConnector();
             List<string> databases = new List<string>();
@@ -44,43 +48,113 @@ namespace BackupSystemTool
             }
             return databases;
         }
-        public void UpdateDatabasesList() { 
-            List<string> databases = GetDatabases();
-            if (databases.Count > 0) { 
-                databases_ListView.ItemsSource = databases;
+
+
+        // sets the source of the listview to a list of JobDatabase Items
+        public void UpdateDatabasesList() {
+            // create a list of JobDatabases
+            List<JobDatabases> jobDatabases = new List<JobDatabases>();
+
+            // add the databases to the database list
+            foreach (string database in GetDatabases())
+            {
+                jobDatabases.Add(new JobDatabases() { id = selectedItem.id, database_name = database });
+            }
+
+            // set the item source of the list to the jobDatabases list
+            if (jobDatabases.Count > 0) { 
+                databases_ListView.ItemsSource = jobDatabases;
             }
         }
-
-        // if in the future the user needs to change the databases related with the job 
-        // we need to follow the following steps 
-        // 1- bring all databases related to the job, 2- either remove the databases or add the new ones to the old ones
-        private void AddDatabasesButton_Click(object sender, RoutedEventArgs e)
-        {
-            // gets the selected items as a list
-            List<string> selectedItemsList = databases_ListView.SelectedItems.Cast<string>().ToList();
-
-            // create the table of the JobDatabases
+        private void LoadSelectedDatabasesList() {
             using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
             {
                 conn.CreateTable<JobDatabases>();
-                // adds the selected items getting the job id and the database name and adding it to the JobDatabases table
+                // Select all database names related to the selected job from the JobDatabases table
+                List<JobDatabases> databasesList = conn.Table<JobDatabases>().Where(jdb => jdb.job_id == selectedItem.id).ToList();
+                // Add the database names to the selectedDatabases list
+                selectedDatabases = databasesList.Select(x => x.database_name).ToList();
+                originalSelectedDatabases = databasesList.Select(x => x.database_name).ToList();
 
-                foreach (string databaseName in selectedItemsList)
+            }
+        }
+        private void AddDatabasesButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<JobDatabases>();
+
+                // Add the new databases to the JobDatabases table
+                foreach (string databaseName in selectedDatabases)
                 {
-                    JobDatabases jobdbItem = new JobDatabases()
+                    if (!originalSelectedDatabases.Contains(databaseName))
                     {
-                        job_id = selectedItem.id,
-                        database_name = databaseName,
-                    };
-                    conn.Insert(jobdbItem);
+                        conn.CreateTable<JobDatabases>();
+                        // Add the item to the JobDatabases table if it's not already there
+                        JobDatabases jobdbItem = new JobDatabases()
+                        {
+                            job_id = selectedItem.id,
+                            database_name = databaseName,
+                        };
+                        conn.Insert(jobdbItem);
+                    }
+                }
+
+                // Delete the old databases from the JobDatabases table
+                foreach (string databaseName in originalSelectedDatabases)
+                {
+                    if (!selectedDatabases.Contains(databaseName))
+                    {
+                        conn.CreateTable<JobDatabases>();
+                        // Delete the record from the JobDatabases table with the specified job_id and database_name// Delete the item from the JobDatabases table if it's there
+                        conn.Execute("DELETE FROM JobDatabases WHERE job_id = ? AND database_name = ?", selectedItem.id, databaseName);
+                    }
                 }
             }
-            // update the related job with the new information. -- NOT DONE --
+
+            // Update the related job with the new information.
             jobPage.relatedDatabases_TextBox.Text = jobPage.GetRelatedDatabases();
 
             this.Close();
         }
-
+        private void addDatabaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button addButton = sender as Button;
+            // set the selected item of the listview to the selected button data context
+            databases_ListView.SelectedItem = addButton.DataContext;
             
+            // get the selected item as a string
+            string selectedDatabaseName = databases_ListView.SelectedItem.ToString();
+
+            if (selectedDatabaseName != null)
+            {
+                // Check if item already exists in the list
+                if (!selectedDatabases.Contains(selectedDatabaseName))
+                {
+                    // Add the item to the list
+                    selectedDatabases.Add(selectedDatabaseName);
+                }
+            }
+        }
+        private void deleteDatabaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button deleteButton = sender as Button;
+            // set the selected item of the listview to the selected button data context
+            databases_ListView.SelectedItem = deleteButton.DataContext;
+
+            // get the selected item as a string
+            string selectedDatabaseName = databases_ListView.SelectedItem.ToString();
+        
+            if (selectedDatabaseName != null)
+            {
+                // Check if item exists in the list
+                if (selectedDatabases.Contains(selectedDatabaseName))
+                {
+                    // Remove the item from the list
+                    selectedDatabases.Remove(selectedDatabaseName);
+                }
+            }
+        }
+
     }
 }

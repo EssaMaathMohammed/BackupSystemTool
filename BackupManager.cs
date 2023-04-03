@@ -112,7 +112,32 @@ namespace BackupSystemTool
             psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mysqldumpbin", "mysqldump.exe");
             psInfo.RedirectStandardInput = false;
             psInfo.RedirectStandardOutput = false;
-            psInfo.Arguments = $"-u root -h localhost --databases {databaseName} --hex-blob";
+
+            // create a default connection item
+            ConnectionItem connectionInfo = new ConnectionItem() { 
+                ServerName= "localhost",
+                Username= "root",
+                Password= ""
+            };
+
+            // select the inforamtion related to the job connections
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<ConnectionItem>();
+                List<ConnectionItem> itemsList = conn.Table<ConnectionItem>().Where(c => c.Id == SelectedItem.connection_id).ToList();
+                if (itemsList.Count > 0)
+                {
+                   connectionInfo = itemsList[0];
+                }
+            }
+
+            // if the password exists put a -p before otherwaise keep it as an empty string
+            string password = !connectionInfo.Password.Equals("") ? "-p" + connectionInfo.Password : "";
+            Debug.Write($"-u {connectionInfo.Username} {password} -h {connectionInfo.ServerName} --databases {databaseName} --hex-blob");
+            // set the needed arguments for the backup
+            psInfo.Arguments = $"-u {connectionInfo.Username} {password} -h {connectionInfo.ServerName} --databases {databaseName} --hex-blob";
+           
+            // pass the username, host parameters from the related job item connection 
             psInfo.UseShellExecute = false;
             psInfo.RedirectStandardOutput = true;
 

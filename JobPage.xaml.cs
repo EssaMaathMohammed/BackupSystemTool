@@ -59,7 +59,6 @@ namespace BackupSystemTool
         {
             jobItemsListView.ItemsSource = GetJobList();
         }
-
         private void AddJobButton_Click(object sender, RoutedEventArgs e)
         {
             AddJobDialog addJobDialog = new AddJobDialog(this);
@@ -180,14 +179,22 @@ namespace BackupSystemTool
                 // cast the selected item to a job item 
                 JobItem selectedJopItem = (JobItem)jobItemsListView.SelectedItem;
 
+                // create a schedule manager passing the selected item to it
+                BackupScheduleManager scheduleManager = new BackupScheduleManager(null, selectedJopItem);
+
                 // delete the related databases from the jobDatabases table
                 using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
                 {
                     conn.CreateTable<JobDatabases>();
                     List<JobDatabases> jobDatabases = conn.Table<JobDatabases>().Where(jdb => jdb.job_id == selectedItem.id).ToList();
 
+                    // iterate throught all the databases realted to the job
                     foreach (JobDatabases database in jobDatabases)
                     {
+                        // if there is a timer realted to the database that timer will be deleted
+                        scheduleManager.removeTimer(selectedJopItem.id, database.database_name);
+
+                        // delete the database name from the database
                         conn.Delete(database);
                     }
                 }
@@ -326,11 +333,21 @@ namespace BackupSystemTool
                     // gets the location of the backup and sets it as the destination
                     if (selectedItem.location_type == App.Locations.LocalLocation.ToString())
                     {
-                        backupManager.BackupToLocalLocation("testingdatabase");
+                        // for each database in GetJobRelatedDatabases 
+                        foreach (JobDatabases database in GetJobRelatedDatabases()) {
+
+                            // create a backup of that database in the local location
+                            backupManager.BackupToLocalLocation(database.database_name);
+                        }
                     }
                     else if (selectedItem.location_type == App.Locations.S3Location.ToString())
                     {
-                        backupManager.BackupToS3Bucket("testingdatabase");
+                        // for each database in GetJobRelatedDatabases 
+                        foreach (JobDatabases database in GetJobRelatedDatabases())
+                        {
+                            // create a backup of that database in the local location
+                            backupManager.BackupToS3Bucket(database.database_name);
+                        }
                     }
                     else if (selectedItem.location_type == null)
                     {
@@ -444,6 +461,19 @@ namespace BackupSystemTool
             WindowState = WindowState.Normal; // Set the window state to normal
             Activate(); // Activate the window to bring it to the top and give it focus
             _notifyIcon.Visible = false; // Hide the notification icon
+        }
+
+        private List<JobDatabases> GetJobRelatedDatabases()
+        {
+
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<JobDatabases>();
+                List<JobDatabases> jobSchedules = conn.Table<JobDatabases>().Where(jbdb => jbdb.job_id == selectedItem.id).ToList();
+
+                return jobSchedules;
+            }
+            
         }
     }
 }

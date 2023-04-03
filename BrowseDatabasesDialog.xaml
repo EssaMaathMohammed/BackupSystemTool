@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BackupSystemTool"
+        xmlns:uc="clr-namespace:BackupSystemTool.Controls"
         mc:Ignorable="d"
-        Title="BrowseDatabasesDialog" Height="400" Width="400">
+        Title="BrowseDatabasesDialog" Height="400" Width="300" MinWidth="320">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="8*"></RowDefinition>
@@ -15,9 +16,7 @@
         <ListView x:Name="databases_ListView">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding}"/>
-                    </StackPanel>
+                    <uc:JobDatabaseUserControl JobDatabases="{Binding}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
