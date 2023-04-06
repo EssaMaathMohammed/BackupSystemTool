@@ -32,7 +32,10 @@ namespace BackupSystemTool
 
         public ClosingDialog()
         {
+            Owner = Application.Current.MainWindow;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
             InitializeComponent();
+
         }
 
         // Event handler for Close button click

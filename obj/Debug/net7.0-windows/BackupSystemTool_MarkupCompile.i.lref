@@ -1,4 +1,17 @@
-﻿
-
+﻿C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\GeneratedInternalTypeHelper.g.i.cs
+FC:\Users\study\source\repos\BackupSystemTool\App.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\AddConnectionDialog.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\AddJobDialog.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\BackupDialog.xaml;;
 FC:\Users\study\source\repos\BackupSystemTool\BrowseDatabasesDialog.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\ConnectionsPage.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\Controls\ConnectionItemControl.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\Controls\JobDatabaseUserControl.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\EditConnectionDialog.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\InsertScheduleDialog.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\JobPage.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\LoginPage.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\RegisterPage.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\S3LocationDialog.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\SnowflakeCloudLocationDialog.xaml;;
 

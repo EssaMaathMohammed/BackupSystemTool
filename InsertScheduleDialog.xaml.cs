@@ -27,7 +27,12 @@ namespace BackupSystemTool
         {
             this.JobPage = jobPage;
             this.SelectedItem = SelectedItem; 
+            
+            Owner = Application.Current.MainWindow;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
             InitializeComponent();
+
         }
 
         private void addScheduleButton_Click(object sender, RoutedEventArgs e)

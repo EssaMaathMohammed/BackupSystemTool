@@ -23,10 +23,16 @@ namespace BackupSystemTool
     public partial class AddConnectionDialog : Window
     {
         ConnectionsPage connectionsPage;
-        public AddConnectionDialog(ConnectionsPage connectionsPage)
+        public int UserId { get; set; }
+        public AddConnectionDialog(ConnectionsPage connectionsPage, int UserId)
         {
-            InitializeComponent();
             this.connectionsPage = connectionsPage;
+            this.UserId = UserId;
+
+            Owner = Application.Current.MainWindow;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            InitializeComponent();
         }
 
         private void AddConnectionButton_Click(object sender, RoutedEventArgs e)
@@ -36,6 +42,7 @@ namespace BackupSystemTool
             ConnectionItem connectionItem = new ConnectionItem()
             {
                 ConnectionName = connectionNameTextBox.Text,
+                UserId = this.UserId,
                 Username = usernameTextBox.Text,
                 Password = userPasswordPasswordBox.Password,
                 ServerName = serverNameTextBox.Text,

@@ -1,5 +1,6 @@
 ﻿using BackupSystemTool.DatabaseClasses;
 using Gu.Wpf.Adorners;
+using Microsoft.VisualBasic.ApplicationServices;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace BackupSystemTool
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
@@ -63,6 +65,12 @@ namespace BackupSystemTool
                         {
                             // If a match is found, set loggedIn to true
                             loggedIn = true;
+
+                            App.UserId = user.id;
+
+                            // start the schedules of the application
+                            StartSchedules();
+
                             // Open the ConnectionsPage and close the login page
                             ConnectionsPage connectionsPage = new ConnectionsPage();
                             connectionsPage.Show();
@@ -102,5 +110,35 @@ namespace BackupSystemTool
             return true;
         }
 
+        private void StartSchedules()
+        {
+            // get a list of all the job items
+            List<JobItem> jobItems;
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<JobItem>();
+                jobItems = conn.Table<JobItem>().Where(jb => jb.userId == App.UserId).ToList();
+            }
+
+            // for each job item start select the schedules related to them and start scheduling them
+            foreach (JobItem jobItem in jobItems)
+            {
+                // create a schedule manager to add the schedules
+                BackupScheduleManager scheduleManager = new BackupScheduleManager(null, jobItem);
+
+                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                {
+                    conn.CreateTable<BackupSchedule>();
+                    List<BackupSchedule> jobSchedules = conn.Table<BackupSchedule>().Where(schd => schd.job_id == jobItem.id).ToList();
+
+                    // for each schedule related to the job (each job may have multiple schedules)
+                    // we need to add it to the timer list and start it
+                    foreach (BackupSchedule backupSchedule in jobSchedules)
+                    {
+                        scheduleManager.AddSchedule(backupSchedule);
+                    }
+                }
+            }
+        }
     }
 }

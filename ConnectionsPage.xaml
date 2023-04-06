@@ -6,7 +6,8 @@
         xmlns:uc="clr-namespace:BackupSystemTool.Controls"
         xmlns:local="clr-namespace:BackupSystemTool"
         mc:Ignorable="d"
-        Title="ConnectionsPage" Height="500" Width="800" MinWidth="700" MinHeight="500">
+        Title="ConnectionsPage" Height="500" Width="800" MinWidth="700" MinHeight="500"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="600"></ColumnDefinition>
@@ -27,7 +28,15 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
+        
+        <Button Content="Job Page"
+                Click="LoginPageButton_Click"
+                Grid.Column="1" 
+                Width="50" Height="25" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Top" 
+                Margin="15 15 15 10"/>
+        
         <Button Content="Add"
                 Click="addConnection_Click"
                 Grid.Column="1" 

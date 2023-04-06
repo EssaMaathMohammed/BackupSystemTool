@@ -15,7 +15,11 @@ namespace BackupSystemTool
         JobPage jobPage;
         public AddJobDialog(JobPage jobPage)
         {
+            Owner = Application.Current.MainWindow;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
             InitializeComponent();
+
             if (ConnectionsPage.GetConnectionsList().Count > 0)
             {
                 List<ConnectionItem> comboBoxItems = new List<ConnectionItem>();
@@ -41,9 +45,10 @@ namespace BackupSystemTool
         private void addJobButton_Click(object sender, RoutedEventArgs e)
         {
             ConnectionItem connectionItem = (ConnectionItem)connectionItemsComboBox.SelectedItem;
-             
+
             JobItem jobItem = new JobItem()
             {
+                userId = App.UserId,
                 job_name = jobName_TextBox.Text,
                 connection_name = connectionItem.ConnectionName,
                 connection_id = connectionItem.Id,

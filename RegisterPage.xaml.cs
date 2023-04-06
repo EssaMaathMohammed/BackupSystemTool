@@ -25,6 +25,7 @@ namespace BackupSystemTool
         public RegisterPage()
         {
             InitializeComponent();
+
         }
 
         private void registerButton_Click(object sender, RoutedEventArgs e)

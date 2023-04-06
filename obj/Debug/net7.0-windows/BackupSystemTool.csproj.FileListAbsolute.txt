@@ -60,7 +60,6 @@ C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BackupDial
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BrowseDatabasesDialog.g.cs
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ConnectionsPage.g.cs
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\Controls\ConnectionItemControl.g.cs
-C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\DatabaseTester.g.cs
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\EditConnectionDialog.g.cs
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\JobPage.g.cs
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\LoginPage.g.cs
@@ -77,7 +76,6 @@ C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BackupDial
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\BrowseDatabasesDialog.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ConnectionsPage.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\Controls\ConnectionItemControl.baml
-C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\DatabaseTester.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\EditConnectionDialog.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\JobPage.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\LoginPage.baml

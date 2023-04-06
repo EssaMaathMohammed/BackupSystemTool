@@ -48,7 +48,7 @@ namespace BackupSystemTool
             }
 
             // set the type of location in the job table
-            selectedItem.location_type = App.Locations.Snowflake.ToString();
+            //selectedItem.location_type = App.Locations.Snowflake.ToString();
 
             // updates the selected item location type
             using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
