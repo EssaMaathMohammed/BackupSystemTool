@@ -30,7 +30,7 @@ namespace BackupSystemTool
                 string strBackupFileName = GetRelatedLocation<string>();
 
                 // create a unique name for the backup
-                string backupFileName = GenerateBackupFileName();
+                string backupFileName = GenerateBackupFileName(databaseName);
 
                 // combine the path and unique name of the file
                 string backupFullPath = Path.Combine(strBackupFileName, backupFileName);
@@ -152,9 +152,9 @@ namespace BackupSystemTool
         }
 
         // creates a unique name for the backup file
-        private string GenerateBackupFileName()
+        private string GenerateBackupFileName(string databasename)
         {
-            return SelectedItem.job_name + "_backup_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".sql";
+            return SelectedItem.job_name + "_"  + databasename + "_backup_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".sql";
         }
 
         // gets the backup location of the selected item

@@ -24,7 +24,6 @@ namespace BackupSystemTool
         public JobPage()
         {
             InitializeComponent();
-            StartSchedules();
             UpdateJobList();
 
             // Get the icon file path
@@ -50,11 +49,10 @@ namespace BackupSystemTool
             using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
             {
                 conn.CreateTable<JobItem>();
-                jobItems = conn.Table<JobItem>().ToList();
+                jobItems = conn.Table<JobItem>().Where(jbItem=> jbItem.userId == App.UserId).ToList();
             }
             return jobItems;
         }
-
         public void UpdateJobList()
         {
             jobItemsListView.ItemsSource = GetJobList();
@@ -64,7 +62,6 @@ namespace BackupSystemTool
             AddJobDialog addJobDialog = new AddJobDialog(this);
             addJobDialog.ShowDialog();
         }
-
         public string GetRelatedDatabases() {
             string relatedDatabases = "";
 
@@ -377,7 +374,7 @@ namespace BackupSystemTool
                 // gets the database/s as a list of string
                 if (GetRelatedDatabases() != "")
                 {
-                    InsertScheduleDialog insertScheduleDialog = new InsertScheduleDialog(this, selectedItem); insertScheduleDialog.Show();
+                    InsertScheduleDialog insertScheduleDialog = new InsertScheduleDialog(this, selectedItem); insertScheduleDialog.ShowDialog();
                 }
                 else
                 {
@@ -392,37 +389,6 @@ namespace BackupSystemTool
             }
         }
 
-        // this function needs to be moved from this page to after the login operation of the user
-        private void StartSchedules()
-        {
-            // get a list of all the job items
-            List<JobItem> jobItems;
-            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
-            {
-                conn.CreateTable<JobItem>();
-                jobItems = conn.Table<JobItem>().ToList();
-            }
-
-            // for each job item start select the schedules related to them and start scheduling them
-            foreach (JobItem jobItem in jobItems)
-            {
-                // create a schedule manager to add the schedules
-                BackupScheduleManager scheduleManager = new BackupScheduleManager(null,jobItem);
-
-                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
-                {
-                    conn.CreateTable<BackupSchedule>();
-                    List<BackupSchedule> jobSchedules = conn.Table<BackupSchedule>().Where(schd => schd.job_id == jobItem.id).ToList();
-
-                    // for each schedule related to the job (each job may have multiple schedules)
-                    // we need to add it to the timer list and start it
-                    foreach (BackupSchedule backupSchedule in jobSchedules)
-                    {
-                        scheduleManager.AddSchedule(backupSchedule);
-                    }
-                }
-            }
-        }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

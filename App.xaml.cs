@@ -20,9 +20,10 @@ namespace BackupSystemTool
         {
             LocalLocation,
             LANLocation,
-            Snowflake,
             S3Location
         }
+
+        public static int UserId { get; set; }
         // Creates a path to the database directory location + Database Name
         static string ApplicationFileName = "BackupSystemTool";
         static string databaseName = "PII.db";

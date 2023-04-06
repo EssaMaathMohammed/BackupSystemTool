@@ -1,9 +1,11 @@
-﻿using SQLite;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BackupSystemTool.DatabaseClasses
 {
@@ -13,6 +15,9 @@ namespace BackupSystemTool.DatabaseClasses
         public int Id { get; set; }
 
         [MaxLength(50)]
+
+        public int UserId { get; set; }
+
         public string ConnectionName { get; set; }
 
         [MaxLength(50)]
@@ -31,7 +36,7 @@ namespace BackupSystemTool.DatabaseClasses
         {
             get
             {
-                return $"Server={ServerName};Port={PortNumber};Uid={Username};Pwd={Password};";
+                return $"Server={ServerName} ;User Id={Username};Password={Password};";
             }
         }
     }

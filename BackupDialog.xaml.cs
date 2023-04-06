@@ -21,6 +21,9 @@ namespace BackupSystemTool
     {
         public BackupDialog()
         {
+            Owner = Application.Current.MainWindow;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
             InitializeComponent();
         }
 

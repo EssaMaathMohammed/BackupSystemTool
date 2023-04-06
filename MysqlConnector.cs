@@ -32,25 +32,33 @@ namespace BackupSystemTool
         }
         public List<string> GetDatabases(string server, string userID, string password)
         {
-
             List<string> databases = new List<string>();
-
-            string connectionString = $"Server={server} ;User Id={userID};Password={password};";
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                connection.Open();
-                MySqlCommand cmd = new MySqlCommand("SHOW DATABASES", connection);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+
+                string connectionString = $"Server={server} ;User Id={userID};Password={password};";
+
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    while (reader.Read())
+                    connection.Open();
+                    MySqlCommand cmd = new MySqlCommand("SHOW DATABASES", connection);
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        databases.Add(reader.GetString(0));
+                        while (reader.Read())
+                        {
+                            databases.Add(reader.GetString(0));
+                        }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return databases;
+
+            }catch (Exception ex)
+            {
+                databases.Add("No Items to Show");
+                return databases;
             }
-            return databases;
+            
         }
 
     }

@@ -20,6 +20,9 @@ namespace BackupSystemTool
         {
             this.jobPage = jobPage;
             this.selectedItem = selectedItem;
+
+            Owner = Application.Current.MainWindow;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
             InitializeComponent();
         }
 

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Closed="Window_Closed"
-        Title="JobPage" Height="450" Width="950">
+        Title="JobPage" Height="450" Width="950" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>

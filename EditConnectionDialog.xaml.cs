@@ -27,7 +27,10 @@ namespace BackupSystemTool
         public ConnectionItemControl currentItem { get; set; }
         public EditConnectionDialog(ConnectionItem connectionItem, ConnectionItemControl currentItem)
         {
+            Owner = Application.Current.MainWindow;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
             InitializeComponent();
+
             this.ConnectionItem = connectionItem;
             this.currentItem = currentItem;
             connectionNameTextBox.Text = ConnectionItem.ConnectionName;

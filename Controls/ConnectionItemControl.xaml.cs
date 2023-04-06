@@ -1,4 +1,5 @@
-﻿using BackupSystemTool.DatabaseClasses;
+﻿using Amazon.Runtime.EventStreams.Internal;
+using BackupSystemTool.DatabaseClasses;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -52,17 +53,40 @@ namespace BackupSystemTool.Controls
 
         // The new item (connection Item) gets bound, we call a custom method to assign
         // the values of the new item to the xaml file text blocks
-        private static void setConnectionDetails(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static async void setConnectionDetails(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is ConnectionItemControl itemControls)
             {
                 ConnectionItem newConnectionItem = (ConnectionItem)e.NewValue;
+                itemControls.StatusTextBlock.Text = "Connecting";
                 itemControls.ConnectionNameTextBlock.Text = newConnectionItem.ConnectionName;
-                itemControls.StatusTextBlock.Text = "Status: UP";
-                Debug.WriteLine(e.NewValue.ToString());
+                itemControls.connectionLocation_TextBlock.Text = newConnectionItem.ServerName;
+                itemControls.connectionPort_TextBlock.Text = newConnectionItem.PortNumber;
+                itemControls.connectionString_TextBlock.Text = newConnectionItem.ConnectionString;
+                itemControls.connectionUsername_TextBlock.Text = newConnectionItem.Username;
 
+                await Task.Run(() =>
+                {
+                    MysqlConnector mysqlConnector = new MysqlConnector();
+                    bool isSuccess = false;
+                    try
+                    {
+                        mysqlConnector.GetDatabases(newConnectionItem.ConnectionString);
+                        isSuccess = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        isSuccess = false;
+                    }
+
+                    itemControls.Dispatcher.Invoke(() =>
+                    {
+                        itemControls.StatusTextBlock.Text = isSuccess ? "Status: Up" : "Status: Down";
+                    });
+                });
             }
         }
+
 
         private void expandButton_Click(object sender, RoutedEventArgs e)
         {
@@ -79,24 +103,71 @@ namespace BackupSystemTool.Controls
             }
         }
 
-        private void editButton_Click(object sender, RoutedEventArgs e)
+        private async void editButton_Click(object sender, RoutedEventArgs e)
         {
             EditConnectionDialog editConnectionDialog = new EditConnectionDialog(ConnectionItem,this);
             editConnectionDialog.ShowDialog();
+            ConnectionItem updatedConnectionItem = editConnectionDialog.ConnectionItem;
+
+            this.StatusTextBlock.Text = "Connecting";
+            this.ConnectionNameTextBlock.Text = updatedConnectionItem.ConnectionName;
+            this.connectionLocation_TextBlock.Text = updatedConnectionItem.ServerName;
+            this.connectionPort_TextBlock.Text = updatedConnectionItem.PortNumber;
+            this.connectionString_TextBlock.Text = updatedConnectionItem.ConnectionString;
+            this.connectionUsername_TextBlock.Text = updatedConnectionItem.Username;
+            await Task.Run(() =>
+            {
+                MysqlConnector mysqlConnector = new MysqlConnector();
+                bool isSuccess = false;
+                try
+                {
+                    mysqlConnector.GetDatabases(updatedConnectionItem.ConnectionString);
+                    isSuccess = true;
+                }
+                catch (Exception ex)
+                {
+                    isSuccess = false;
+                }
+
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.StatusTextBlock.Text = isSuccess ? "Status: Up" : "Status: Down";
+                });
+            });
         }
 
         private void deleteButton_Click(object sender, RoutedEventArgs e)
         {
+            bool connectionItemUsed = false;
             MessageBoxResult messageBoxResult = MessageBox.Show(" Are you sure you want to delete this item?", "Delete Confirmation" 
                 , System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (messageBoxResult == MessageBoxResult.Yes) {
-                using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
+
+                // check if the item is being used in the JobPage
+                using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
                 {
-                    sqliteConnection.CreateTable<ConnectionItem>();
-                    sqliteConnection.Delete(ConnectionItem);
+                    conn.CreateTable<JobItem>();
+                    List<JobItem> relatedJobItems = conn.Table<JobItem>().Where(jbItem => jbItem.connection_id == ConnectionItem.Id).ToList();
+                    if (relatedJobItems.Count > 0) { 
+                        connectionItemUsed = true;
+                    } 
                 }
+
+                if (!connectionItemUsed)
+                {
+                    using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
+                    {
+                        sqliteConnection.CreateTable<ConnectionItem>();
+                        sqliteConnection.Delete(ConnectionItem);
+
+                        this.Visibility = Visibility.Collapsed;
+                    }
+                }
+                else {
+                    MessageBox.Show("The Item is in use, Check JobPage for more details");
+                }
+
             }
-            this.Visibility = Visibility.Collapsed;
         }
     }
 }

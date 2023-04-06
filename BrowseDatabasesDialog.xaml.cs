@@ -30,6 +30,10 @@ namespace BackupSystemTool
         public BrowseDatabasesDialog(JobPage jobPage, JobItem selectedItem, ConnectionItem selectedConnectionItem)
         {
             InitializeComponent();
+
+            Owner = Application.Current.MainWindow;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
             this.selectedConnectionItem = selectedConnectionItem;
             this.selectedItem = selectedItem;
             this.jobPage = jobPage;

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,13 +23,15 @@ namespace BackupSystemTool
     /// </summary>
     public partial class ConnectionsPage : Window
     {
+        
         public ConnectionsPage()
         {
+           
             InitializeComponent();
             UpdateConnectionList();
         }
 
-        // Reading the fields of the database ConnectionItem Table
+        // Reading the fields of the database ConnectionItem Table based on the user id
         public static List<ConnectionItem> GetConnectionsList()
         {
             List<ConnectionItem> connectionItems = new List<ConnectionItem>();
@@ -36,7 +39,7 @@ namespace BackupSystemTool
             using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
             {
                 conn.CreateTable<ConnectionItem>();
-                connectionItems = conn.Table<ConnectionItem>().ToList();
+                connectionItems = conn.Table<ConnectionItem>().Where(conItem=> conItem.UserId == App.UserId).ToList();
             }
 
             return connectionItems;
@@ -51,8 +54,15 @@ namespace BackupSystemTool
 
         private void addConnection_Click(object sender, RoutedEventArgs e)
         {
-            AddConnectionDialog dialog = new AddConnectionDialog(this);
+            AddConnectionDialog dialog = new AddConnectionDialog(this, App.UserId);
             dialog.ShowDialog();
+        }
+
+        private void LoginPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            JobPage jobPage = new JobPage();
+            jobPage.Show();
+            this.Close();
         }
     }
 }
