@@ -87,7 +87,7 @@ namespace BackupSystemTool {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;component/backupdialog.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;V1.0.0.0;component/backupdialog.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\BackupDialog.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

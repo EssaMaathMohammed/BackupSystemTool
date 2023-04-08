@@ -63,7 +63,7 @@ namespace BackupSystemTool
                 if (SelectedItem.location_type == App.Locations.LocalLocation.ToString())
                 {
                     var timer = new Timer(intervalInMilliseconds);
-                    timer.Elapsed += (sender, args) => backupManager.BackupToLocalLocation(schedule.DatabaseName);
+                    timer.Elapsed += (sender, args) => backupManager.GenerateEncryptedBackup(schedule.DatabaseName);
                     timer.AutoReset = true;
                     timer.Start(); 
                     _timers.Add(new TimerInfo { Timer = timer, JobId = SelectedItem.id, DatabaseName = schedule.DatabaseName });
@@ -78,7 +78,7 @@ namespace BackupSystemTool
                 else if (SelectedItem.location_type == App.Locations.S3Location.ToString())
                 {
                     var timer = new Timer(intervalInMilliseconds);
-                    timer.Elapsed += (sender, args) => backupManager.BackupToS3Bucket(schedule.DatabaseName);
+                    timer.Elapsed += (sender, args) => backupManager.GenerateEncryptedBackup(schedule.DatabaseName);
                     timer.AutoReset = true;
                     timer.Start(); 
                     _timers.Add(new TimerInfo { Timer = timer, JobId = SelectedItem.id, DatabaseName = schedule.DatabaseName });

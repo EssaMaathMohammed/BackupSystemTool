@@ -28,6 +28,9 @@
     <Compile Update="Controls\JobDatabaseUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="DecryptionPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="EditConnectionDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -70,6 +73,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controls\JobDatabaseUserControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="DecryptionPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="EditConnectionDialog.xaml">

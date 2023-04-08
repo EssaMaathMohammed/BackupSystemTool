@@ -25,9 +25,7 @@ namespace BackupSystemTool
         public RegisterPage()
         {
             InitializeComponent();
-
         }
-
         private void registerButton_Click(object sender, RoutedEventArgs e)
         {
             if (ValidatePin()) {
@@ -54,11 +52,14 @@ namespace BackupSystemTool
 
                 // generate the key for the user and set the value of the key in the registry
                 KeyGenerator keyGenerator = new KeyGenerator(user.id.ToString(),user.salt);
-                keyGenerator.setKey();
+                keyGenerator.setUserKeyIVReg();
 
+                // generate the KEK for the user and set the value of the KEK in the registry
+                keyGenerator.SetUserKeyEncryptionKeyReg();
 
                 // Show a message box to indicate that registration was completed successfully
                 MessageBox.Show("Registration Completed.", "Registration Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(keyGenerator.getUserKeyReg() + " " + keyGenerator.getUserIVReg() + " " + keyGenerator.GetUserKeyEncryptionKeyReg(), "Registration Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 // Create a new instance of the MainWindow (login page) and opens it
                 MainWindow loginPage = new MainWindow();
@@ -67,7 +68,6 @@ namespace BackupSystemTool
                 this.Close();
             }
         }
-
         private bool ValidatePin()
         {
             if (string.IsNullOrEmpty(PINTextBox.Password))

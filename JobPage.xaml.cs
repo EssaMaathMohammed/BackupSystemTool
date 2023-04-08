@@ -308,7 +308,6 @@ namespace BackupSystemTool
                 }
             }
         }
-
         private void cloudLocationMenuOption_Click(object sender, RoutedEventArgs e)
         {
             S3LocationDialog locationsDialog = new S3LocationDialog(this, selectedItem);
@@ -334,7 +333,7 @@ namespace BackupSystemTool
                         foreach (JobDatabases database in GetJobRelatedDatabases()) {
 
                             // create a backup of that database in the local location
-                            backupManager.BackupToLocalLocation(database.database_name);
+                            backupManager.GenerateEncryptedBackup(database.database_name);
                         }
                     }
                     else if (selectedItem.location_type == App.Locations.S3Location.ToString())
@@ -343,7 +342,7 @@ namespace BackupSystemTool
                         foreach (JobDatabases database in GetJobRelatedDatabases())
                         {
                             // create a backup of that database in the local location
-                            backupManager.BackupToS3Bucket(database.database_name);
+                            backupManager.GenerateEncryptedBackup(database.database_name);
                         }
                     }
                     else if (selectedItem.location_type == null)
@@ -388,8 +387,6 @@ namespace BackupSystemTool
                 MessageBox.Show("Please Select an item first to start backup.");
             }
         }
-
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Show the custom closing dialog
@@ -440,6 +437,13 @@ namespace BackupSystemTool
                 return jobSchedules;
             }
             
+        }
+
+        private void decryptionPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            DecryptionPage decryptionPage = new DecryptionPage();
+            decryptionPage.Show();
+            this.Close();
         }
     }
 }

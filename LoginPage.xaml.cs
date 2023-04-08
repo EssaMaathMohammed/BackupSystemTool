@@ -68,6 +68,8 @@ namespace BackupSystemTool
 
                             App.UserId = user.id;
 
+                            KeyGenerator keyGenerator = new KeyGenerator(user.id.ToString());
+                            Debug.Write(keyGenerator.getUserKeyReg() + " " + keyGenerator.getUserIVReg() + " " + keyGenerator.GetUserKeyEncryptionKeyReg());
                             // start the schedules of the application
                             StartSchedules();
 

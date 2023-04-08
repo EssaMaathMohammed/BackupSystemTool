@@ -78,7 +78,7 @@ namespace BackupSystemTool.Controls {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;component/controls/jobdatabaseusercontrol.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;V1.0.0.0;component/controls/jobdatabaseusercontrol.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Controls\JobDatabaseUserControl.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

@@ -1,0 +1,26 @@
+﻿<Window x:Class="BackupSystemTool.DecryptionPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BackupSystemTool"
+        mc:Ignorable="d"
+        Title="DecryptionPage" Height="270" Width="400">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20">
+        <TextBlock Text="Decrypt Backup" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" />
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Select backup file:" VerticalAlignment="Center" />
+            <Button x:Name="BrowseBackupLocationButton" Content="Browse" Margin="10,0,0,0" Click="BrowseBackupLocationButton_Click" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Output location:" VerticalAlignment="Center" />
+            <Button x:Name="BrowseOutputLocationButton" Content="Browse" Margin="10,0,0,0" Click="BrowseOutputLocationButton_Click"/>
+        </StackPanel>
+
+        <Button x:Name="DecryptButton" Content="Decrypt Backup" Width="150" Margin="0,10,0,10" Click="DecryptButton_Click"/>
+
+        <TextBlock x:Name="StatusText" Text="Decryption status" FontSize="16" FontWeight="Bold" />
+    </StackPanel>
+</Window>
