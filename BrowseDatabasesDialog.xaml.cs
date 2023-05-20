@@ -42,20 +42,17 @@ namespace BackupSystemTool
             // loads all the databases realte to the mysql server
             UpdateDatabasesList();
         }
-       
-        public List<string> GetDatabases() {
+
+        public List<string> GetDatabases()
+        {
             MysqlConnector connector = new MysqlConnector();
-            List<string> databases = new List<string>();
-            foreach (string conn in connector.GetDatabases(selectedConnectionItem.ServerName, selectedConnectionItem.Username, selectedConnectionItem.Password))
-            {
-                databases.Add(conn);
-            }
-            return databases;
+            return connector.GetDatabases(selectedConnectionItem.ServerName, selectedConnectionItem.Username, selectedConnectionItem.Password);
         }
 
 
         // sets the source of the listview to a list of JobDatabase Items
-        public void UpdateDatabasesList() {
+        public void UpdateDatabasesList()
+        {
             // create a list of JobDatabases
             List<JobDatabases> jobDatabases = new List<JobDatabases>();
 
@@ -66,11 +63,13 @@ namespace BackupSystemTool
             }
 
             // set the item source of the list to the jobDatabases list
-            if (jobDatabases.Count > 0) { 
+            if (jobDatabases.Count > 0)
+            {
                 databases_ListView.ItemsSource = jobDatabases;
             }
         }
-        private void LoadSelectedDatabasesList() {
+        private void LoadSelectedDatabasesList()
+        {
             using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
             {
                 conn.CreateTable<JobDatabases>();
@@ -126,7 +125,7 @@ namespace BackupSystemTool
             Button addButton = sender as Button;
             // set the selected item of the listview to the selected button data context
             databases_ListView.SelectedItem = addButton.DataContext;
-            
+
             // get the selected item as a string
             string selectedDatabaseName = databases_ListView.SelectedItem.ToString();
 
@@ -148,7 +147,7 @@ namespace BackupSystemTool
 
             // get the selected item as a string
             string selectedDatabaseName = databases_ListView.SelectedItem.ToString();
-        
+
             if (selectedDatabaseName != null)
             {
                 // Check if item exists in the list

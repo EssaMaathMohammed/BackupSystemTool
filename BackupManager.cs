@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using SQLite;
 using Amazon;
+using Microsoft.VisualBasic.ApplicationServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace BackupSystemTool
 {
@@ -25,10 +27,26 @@ namespace BackupSystemTool
         // creates a backup using GetFullDatabaseBackup and saves it to the selected Local Location
         private void BackupToLocalLocation(string backupFileName, string encryptedBackupData)
         {
+            string decryptedEmail = "";
+            string localBackupLocation = "";
+
+            using (SQLite.SQLiteConnection sqliteConnection = new SQLite.SQLiteConnection(App.databasePath))
+            {
+                // Create the table for UserItem if it does not exist
+                sqliteConnection.CreateTable<UserItem>();
+                // Fetch the specific user based on the provided username
+                UserItem user = sqliteConnection.Table<UserItem>().FirstOrDefault(u => u.id == App.UserId);
+
+                KeyGenerator keyGenerator = new KeyGenerator(App.UserId.ToString());
+
+                Cryptograpy cryptograpy = new Cryptograpy();
+                // decrypt the user email
+                decryptedEmail = cryptograpy.DecryptStringAES(user.email, keyGenerator.getUserKeyReg(), Convert.FromBase64String(keyGenerator.getUserIVReg()));
+            }
             try
             {
                 // Get the local backup location
-                string localBackupLocation = GetRelatedLocation<string>();
+                localBackupLocation = GetRelatedLocation<string>();
 
                 // Combine the path and unique name of the file
                 string backupFullPath = Path.Combine(localBackupLocation, backupFileName);
@@ -42,19 +60,36 @@ namespace BackupSystemTool
                 // Close the file and the backup process
                 strBackupFile.Close();
 
-                // Show a message box to indicate the backup is done
-                MessageBox.Show("Backup done at file:" + localBackupLocation);
+                // send an email to the user showing successfull status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Done", "Backup done and saved to local location: " + localBackupLocation);
             }
             catch (Exception ex)
             {
-                // Show an error message if the backup process fails
-                MessageBox.Show("Error during the backup: \n\n" + ex.Message);
+                // send an email to the user showing error status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Error", "Error during the backup to: " + localBackupLocation);
             }
         }
 
         // creates a backup using GetFullDatabaseBackup and saves it to the selected S3 Bucket
         private void BackupToS3Bucket(string backupFileName, string encryptedBackupData)
         {
+            string decryptedEmail = "";
+            // check if the email exists in the database 
+            using (SQLite.SQLiteConnection sqliteConnection = new SQLite.SQLiteConnection(App.databasePath))
+            {
+                // Create the table for UserItem if it does not exist
+                sqliteConnection.CreateTable<UserItem>();
+                // Fetch the specific user based on the provided username
+                UserItem user = sqliteConnection.Table<UserItem>().FirstOrDefault(u => u.id == App.UserId);
+                
+                KeyGenerator keyGenerator = new KeyGenerator(App.UserId.ToString());
+
+                Cryptograpy cryptograpy = new Cryptograpy();
+                // decrypt the user email
+                decryptedEmail = cryptograpy.DecryptStringAES(user.email, keyGenerator.getUserKeyReg(), Convert.FromBase64String(keyGenerator.getUserIVReg()));
+            }
             try
             {
                 // Get the S3 backup location
@@ -78,18 +113,21 @@ namespace BackupSystemTool
                 // Upload the encrypted backup data to the S3 bucket
                 transferUtility.Upload(transferRequest);
 
-                // Show a message box to indicate the backup is done
-                MessageBox.Show("Backup done and uploaded to S3 bucket:" + s3Item.BucketName);
+                // send an email to the user showing successfull status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Done", "Backup done and saved to S3 bucket: " + s3Item.BucketName);
             }
             catch (AmazonS3Exception s3Exception)
             {
-                // Show an error message if the S3 upload fails
-                MessageBox.Show("Error uploading backup to S3: \n\n" + s3Exception.Message);
+                // send an email to the user showing error status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Error", "Error during the backup to S3 bucket: " + s3Exception.Message);
             }
             catch (Exception ex)
             {
-                // Show an error message if the backup process fails
-                MessageBox.Show("Error during the backup: \n\n" + ex.Message);
+                // send an email to the user showing error status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Error", "Error during the backup to S3 bucket: " + ex.Message);
             }
         }
 

@@ -26,40 +26,82 @@ namespace BackupSystemTool
         {
             InitializeComponent();
         }
+
         private void registerButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ValidatePin()) {
+
+            // validate if the username is taken
+
+            // Check if the username already exists in the database
+            using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
+            {
+                sqliteConnection.CreateTable<UserItem>();
+                var existingUser = sqliteConnection.Find<UserItem>(u => u.username == username);
+                if (existingUser != null)
+                {
+                    MessageBox.Show("This username is already taken.", "Registration Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+            }
+
+            // Validate PIN and Password Match
+            if (ValidatePin() && ValidatePasswordMatch())
+            {
                 Cryptograpy cryptograpy = new Cryptograpy();
 
-                string pin = PINTextBox.Password;
+                // Get the user's inputted username
+                string username = cryptograpy.hashText(usernameTextBox.Text);
+                string email = emailTextBox.Text;
+
+                if (!ValidateEmail(email))
+                {
+                    return;
+                }
+
                 string userSalt = cryptograpy.generateSalt();
+                string pin = PINTextBox.Password;
                 string saltedPIN = pin + userSalt;
+
                 // hash the combination of PIN and Salt
                 string userCiphertext = cryptograpy.hashText(saltedPIN);
 
-                // creates a new UserItem which includes ID (auto),
-                UserItem user = new UserItem()
+                // select the number of users in the database
+                int numUsers = 0;
+                using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
                 {
-                    ciphertext = userCiphertext,
-                    salt = userSalt,
-                };
-                
-                // uses the Sqlite connection to insert the new user
-                using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath)) {
                     sqliteConnection.CreateTable<UserItem>();
-                    sqliteConnection.Insert(user);
+                    numUsers = sqliteConnection.Table<UserItem>().Count();
                 }
 
+                // creates a new UserItem which includes ID (auto), username, email, ciphertext, salt
+                UserItem user = new UserItem()
+                {
+                    id = numUsers + 1,
+                    username = username,
+                    ciphertext = userCiphertext,
+                    salt = userSalt
+                };
+
                 // generate the key for the user and set the value of the key in the registry
-                KeyGenerator keyGenerator = new KeyGenerator(user.id.ToString(),user.salt);
+                KeyGenerator keyGenerator = new KeyGenerator(user.id.ToString(), user.salt);
                 keyGenerator.setUserKeyIVReg();
 
                 // generate the KEK for the user and set the value of the KEK in the registry
                 keyGenerator.SetUserKeyEncryptionKeyReg();
 
+                // set the email to the encrypted email using the user's key and user IV
+                user.email = cryptograpy.EncryptStringAES(email, keyGenerator.getUserKeyReg(), Convert.FromBase64String(keyGenerator.getUserIVReg()));
+                
+                // uses the Sqlite connection to insert the new user
+                using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
+                {
+                    sqliteConnection.CreateTable<UserItem>();
+                    sqliteConnection.Insert(user);
+                }
+               
                 // Show a message box to indicate that registration was completed successfully
                 MessageBox.Show("Registration Completed.", "Registration Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                MessageBox.Show(keyGenerator.getUserKeyReg() + " " + keyGenerator.getUserIVReg() + " " + keyGenerator.GetUserKeyEncryptionKeyReg(), "Registration Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(user.email + " " + keyGenerator.getUserKeyReg() + " " + keyGenerator.getUserIVReg(), "Registration Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 // Create a new instance of the MainWindow (login page) and opens it
                 MainWindow loginPage = new MainWindow();
@@ -68,8 +110,27 @@ namespace BackupSystemTool
                 this.Close();
             }
         }
+
+
+        private bool ValidatePasswordMatch()
+        {
+            // Check if passwords match
+            if (PINTextBox.Password != repeatPINTextBox.Password)
+            {
+                MessageBox.Show("Passwords do not match.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+            return true;
+        }
         private bool ValidatePin()
         {
+
+            if (string.IsNullOrEmpty(usernameTextBox.Text) || string.IsNullOrEmpty(emailTextBox.Text))
+            {
+                MessageBox.Show("Username and Email cannot be empty.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+
             if (string.IsNullOrEmpty(PINTextBox.Password))
             {
                 MessageBox.Show("Please enter PIN", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -87,7 +148,31 @@ namespace BackupSystemTool
                 MessageBox.Show("PIN must be between 6 and 12 characters long", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return false;
             }
+
+
             return true;
+        }
+
+        private bool ValidateEmail(string email)
+        {
+            // Define a regular expression for email format
+            string emailRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+
+            // Check if email matches the regular expression
+            if (!Regex.IsMatch(email, emailRegex))
+            {
+                MessageBox.Show("Email is not in a valid format.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void loginPageLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow loginPage = new MainWindow();
+            loginPage.Show();
+            this.Close();
         }
     }
 }

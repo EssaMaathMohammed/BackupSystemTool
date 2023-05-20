@@ -1,4 +1,4 @@
-﻿C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\GeneratedInternalTypeHelper.g.cs
+﻿
 FC:\Users\study\source\repos\BackupSystemTool\App.xaml;;
 FC:\Users\study\source\repos\BackupSystemTool\AddConnectionDialog.xaml;;
 FC:\Users\study\source\repos\BackupSystemTool\AddJobDialog.xaml;;
@@ -15,4 +15,5 @@ FC:\Users\study\source\repos\BackupSystemTool\LoginPage.xaml;;
 FC:\Users\study\source\repos\BackupSystemTool\RegisterPage.xaml;;
 FC:\Users\study\source\repos\BackupSystemTool\S3LocationDialog.xaml;;
 FC:\Users\study\source\repos\BackupSystemTool\SnowflakeCloudLocationDialog.xaml;;
+FC:\Users\study\source\repos\BackupSystemTool\ResetPasswordPage.xaml;;
 

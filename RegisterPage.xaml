@@ -6,20 +6,32 @@
         xmlns:local="clr-namespace:BackupSystemTool"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="RegisterPage" Height="450" Width="800">
+        Title="RegisterPage" Height="400" Width="300" WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel>
             <Label Content="Register" 
                    Style="{StaticResource loginBorderStlye}"/>
 
-            <PasswordBox adorners:Watermark.Text="Enter Your Pin Here"
+            <TextBox x:Name="usernameTextBox" adorners:Watermark.Text="                 Username" Style="{StaticResource textBoxStyle}"/>
+            <TextBox x:Name="emailTextBox" adorners:Watermark.Text="                    Email" Style="{StaticResource textBoxStyle}"/>
+            <PasswordBox adorners:Watermark.Text="                 Password"
                             x:Name="PINTextBox" 
+                            Style="{StaticResource passwordBoxStyle}"/>
+            <PasswordBox adorners:Watermark.Text="          Repeat Password"
+                            x:Name="repeatPINTextBox" 
                             Style="{StaticResource passwordBoxStyle}"/>
 
             <Button x:Name="registerButton" Content="Register" 
                         Click="registerButton_Click"
-                        Style="{StaticResource greenBackgroundButton}"/>
+                        Style="{StaticResource greenBackgroundButton}" Width="253"/>
 
+            <Label x:Name="loginPageLabel" HorizontalAlignment="Center" VerticalAlignment="Center" MouseLeftButtonUp="loginPageLabel_MouseLeftButtonUp">
+                <TextBlock Text="Login" FontSize="11">
+                    <TextBlock.TextDecorations>
+                        <TextDecoration Location="Underline" PenThicknessUnit="Pixel"/>
+                    </TextBlock.TextDecorations>
+                </TextBlock>
+            </Label>
         </StackPanel>
     </Grid>
 </Window>

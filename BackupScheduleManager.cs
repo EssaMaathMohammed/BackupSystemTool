@@ -22,6 +22,12 @@ namespace BackupSystemTool
             this.SelectedItem = SelectedItem;
         }
 
+        // this constrctor is used for operations that doesnt require selected Items
+        public BackupScheduleManager() {
+            this.SelectedItem = null;
+            this.JobPage = null;
+        }
+
         //// loads the schedule items from the database into a list
         //public List<BackupSchedule> LoadSchedulesFromDatabase()
         //{
@@ -63,7 +69,10 @@ namespace BackupSystemTool
                 if (SelectedItem.location_type == App.Locations.LocalLocation.ToString())
                 {
                     var timer = new Timer(intervalInMilliseconds);
-                    timer.Elapsed += (sender, args) => backupManager.GenerateEncryptedBackup(schedule.DatabaseName);
+                    timer.Elapsed += (sender, args) =>
+                    {
+                        Task.Run(() => backupManager.GenerateEncryptedBackup(schedule.DatabaseName));
+                    }; 
                     timer.AutoReset = true;
                     timer.Start(); 
                     _timers.Add(new TimerInfo { Timer = timer, JobId = SelectedItem.id, DatabaseName = schedule.DatabaseName });
@@ -78,7 +87,10 @@ namespace BackupSystemTool
                 else if (SelectedItem.location_type == App.Locations.S3Location.ToString())
                 {
                     var timer = new Timer(intervalInMilliseconds);
-                    timer.Elapsed += (sender, args) => backupManager.GenerateEncryptedBackup(schedule.DatabaseName);
+                    timer.Elapsed += (sender, args) =>
+                    {
+                        Task.Run(() => backupManager.GenerateEncryptedBackup(schedule.DatabaseName));
+                    }; 
                     timer.AutoReset = true;
                     timer.Start(); 
                     _timers.Add(new TimerInfo { Timer = timer, JobId = SelectedItem.id, DatabaseName = schedule.DatabaseName });
@@ -98,7 +110,6 @@ namespace BackupSystemTool
             }
         }
 
-
         // remove timer if the user updates the schedule
         public void removeTimer(int jobId, string databaseName)
         {
@@ -109,6 +120,22 @@ namespace BackupSystemTool
                 timerToRemove.Timer.Stop();
                 timerToRemove.Timer.Dispose();
                 _timers.Remove(timerToRemove);
+            }
+        }
+
+        // clear all the timers, used to ensure a clean closing operation of the app and logging out
+        public void clearAllTimers(List<JobItem> jobItems) { 
+            foreach (JobItem item in jobItems)
+            {
+                // create a list of timers to remove
+                List<TimerInfo> timersToRemove = _timers.Where(t => t.JobId == item.id).ToList();
+                // stop and remove the timers
+                foreach (var timer in timersToRemove)
+                {
+                    timer.Timer.Stop();
+                    timer.Timer.Dispose();
+                    _timers.Remove(timer);
+                }
             }
         }
 

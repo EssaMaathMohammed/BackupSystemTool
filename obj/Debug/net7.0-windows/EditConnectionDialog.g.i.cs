@@ -111,7 +111,7 @@ namespace BackupSystemTool {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;V1.0.0.0;component/editconnectiondialog.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BackupSystemTool;component/editconnectiondialog.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\EditConnectionDialog.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

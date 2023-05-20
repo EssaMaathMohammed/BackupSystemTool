@@ -40,7 +40,7 @@ namespace BackupSystemTool
 
         public string DecryptStringAES(string cipherText, string key, byte[] iv)
         {
-            string decrypted;
+            string decrypted = "";
 
             using (Aes aes = Aes.Create())
             {
@@ -60,7 +60,6 @@ namespace BackupSystemTool
                     }
                 }
             }
-
             return decrypted;
         }
 
@@ -98,6 +97,7 @@ namespace BackupSystemTool
                 return iv;
             }
         }
+
 
     }
 }

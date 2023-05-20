@@ -55,8 +55,7 @@ namespace BackupSystemTool
 
             }catch (Exception ex)
             {
-                databases.Add("No Items to Show");
-                return databases;
+                return null;
             }
             
         }

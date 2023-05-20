@@ -102,3 +102,5 @@ C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\Controls\J
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\Controls\JobDatabaseUserControl.baml
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\DecryptionPage.g.cs
 C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\DecryptionPage.baml
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ResetPasswordPage.g.cs
+C:\Users\study\source\repos\BackupSystemTool\obj\Debug\net7.0-windows\ResetPasswordPage.baml

@@ -11,6 +11,8 @@ namespace BackupSystemTool.DatabaseClasses
     {
         [PrimaryKey, AutoIncrement]
         public int id { get; set; }
+        public string username { get; set; }
+        public string email { get; set; }
         public string ciphertext { get; set; }
         public string salt { get; set; }
     }

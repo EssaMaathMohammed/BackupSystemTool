@@ -6,43 +6,94 @@
         xmlns:uc="clr-namespace:BackupSystemTool.Controls"
         xmlns:local="clr-namespace:BackupSystemTool"
         mc:Ignorable="d"
-        Title="ConnectionsPage" Height="500" Width="800" MinWidth="700" MinHeight="500"
-        WindowStartupLocation="CenterScreen">
-    <Grid>
+        Title="ConnectionsPage" Height="500" Width="900" MinWidth="800" MinHeight="500"
+        WindowStartupLocation="CenterScreen" Closing="Window_Closing" Closed="Window_Closed">
+    <Grid >
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#5B85AA" Offset="0.4" />
+                <GradientStop Color="#4E668D" Offset="0.7" />
+                <GradientStop Color="#414770" Offset="0.85" />
+                <GradientStop Color="#372248" Offset="1.1" />
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="600"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition MinWidth="710"></ColumnDefinition>
+            <ColumnDefinition MinWidth="100"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+
         <ListView x:Name="ConnectionsListView" 
-                  Margin="5" 
-                  HorizontalAlignment="Left"
-                  MinWidth="550">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </ListView.ItemContainerStyle>
+                  Margin="0,10,0,10" 
+                  HorizontalAlignment="Center"
+                  MinWidth="700" 
+                  Style="{StaticResource connectionListViewStyle}"
+                   ItemContainerStyle="{StaticResource customListViewItemStyle}" Width="606">
+
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <uc:ConnectionItemControl ConnectionItem="{Binding}" Height="40"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        
-        <Button Content="Job Page"
-                Click="LoginPageButton_Click"
-                Grid.Column="1" 
-                Width="50" Height="25" 
-                HorizontalAlignment="Right" 
-                VerticalAlignment="Top" 
-                Margin="15 15 15 10"/>
-        
-        <Button Content="Add"
+
+        <Button Content="+"
                 Click="addConnection_Click"
-                Grid.Column="1" 
-                Width="50" Height="50" 
+                Grid.Column="0"
                 HorizontalAlignment="Right" 
-                VerticalAlignment="Bottom" 
-                Margin="15 0 15 10"/>
+                VerticalAlignment="Bottom"
+                Style="{StaticResource connectionsPageButton}" />
+
+
+        <ListView 
+            x:Name="navigationListView"
+            Grid.Column="1"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"
+            Margin="0,10,5,0" 
+            Width="170" Height="210"
+            Visibility="Collapsed"
+            Style="{StaticResource connectionListViewStyle}"
+            ItemContainerStyle="{StaticResource customListViewItemStyle}">
+            <ListViewItem Height="38"/>
+            <ListViewItem > 
+                <Button Content="Job Page" 
+                    Click="LoginPageButton_Click"
+                    Grid.Column="1" 
+                    Style="{StaticResource connectionsPageNavButton}"
+                    Margin="3,0,0,0"/>
+            </ListViewItem>
+            <ListViewItem>
+                <Button x:Name="decryptionPageButton" Content="Decryption Page"
+                    Click="decryptionPageButton_Click"
+                    Style="{StaticResource connectionsPageNavButton}"
+                    Grid.Column="1" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Top" Margin="3,0,0,0"/>
+            </ListViewItem>
+            <ListViewItem>
+                <Button x:Name="logoutButton" Content="Logout"
+                        Click="logoutButton_Click"
+                        Style="{StaticResource connectionsPageNavButton}"
+                        Grid.Column="1" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Top" Margin="3,0,0,0"/>
+            </ListViewItem>
+        </ListView>
+
+        <Border x:Name="buttonBorder"
+                Style="{StaticResource buttonRoundBorderStyle}"
+                Background="Transparent"
+                BorderBrush="White"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Top"
+                Margin="0,10,10,0"
+                Grid.Column="1" >
+            <Button Content="☰"
+                    x:Name="navigationButton"
+                    Click="navigationButton_Click"
+                    Style="{StaticResource navigationButtonStyle}"/>
+        </Border>
+
+
     </Grid>
 </Window>
