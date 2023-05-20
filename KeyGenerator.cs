@@ -10,6 +10,7 @@ namespace BackupSystemTool
 {
     public class KeyGenerator
     {
+
         private const string KeyName = "BackupSystemTool";
         private string SubKeyName { get; set; }
         private string SubKekName { get; set; }
