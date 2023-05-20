@@ -33,29 +33,33 @@ namespace BackupSystemTool
             InitializeComponent();
 
         }
-
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
             // variable to track whether the login was successful
             bool loggedIn = false;
 
-            // Validate the user-inputted PIN
-            if (ValidatePin())
+            // create an instance of the crypto class
+            Cryptograpy cryptograpy = new Cryptograpy();
+
+            // Get the user's inputted username
+            string usernameInput = cryptograpy.hashText(usernameTextBox.Text); 
+
+            // Validate the user-inputted PIN and username
+            if (ValidateLoginInfo()) 
             {
                 using (SQLiteConnection sqliteConnection = new SQLiteConnection(App.databasePath))
                 {
-                    Cryptograpy cryptograpy = new Cryptograpy();
                     // Create the table for UserItem if it does not exist
                     sqliteConnection.CreateTable<UserItem>();
-                    // Get a list of all UserItem objects stored in the database
-                    List<UserItem> users = sqliteConnection.Table<UserItem>().ToList();
+                    // Fetch the specific user based on the provided username
+                    UserItem user = sqliteConnection.Table<UserItem>().FirstOrDefault(u => u.username == usernameInput);
 
-                    // Get the user's inputted PIN
-                    string userInput = PINTextBox.Password;
-
-                    // Loop through each user in the database
-                    foreach (UserItem user in users)
+                    // If user with the provided username exists
+                    if (user != null)
                     {
+                        // Get the user's inputted PIN
+                        string userInput = PINTextBox.Password;
+
                         // Combine the salt and user inputted PIN
                         string saltedPIN = userInput + user.salt;
                         // Hash the salted PIN
@@ -65,8 +69,11 @@ namespace BackupSystemTool
                         {
                             // If a match is found, set loggedIn to true
                             loggedIn = true;
-
+                            // set the user id and email of the user to be used in the application
                             App.UserId = user.id;
+
+                            KeyGenerator keyGenerator = new KeyGenerator(user.id.ToString());
+                            Debug.Write(user.email + " " + keyGenerator.getUserKeyReg() + " " + keyGenerator.getUserIVReg());
 
                             // start the schedules of the application
                             StartSchedules();
@@ -75,19 +82,19 @@ namespace BackupSystemTool
                             ConnectionsPage connectionsPage = new ConnectionsPage();
                             connectionsPage.Show();
                             this.Close();
-                            // Break out of the loop since the user has been found
-                            break;
                         }
                     }
-                }
-                // If no matching user is found, show an error message
-                if (!loggedIn)
-                {
-                    MessageBox.Show("Incorrect PIN. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // If no matching user is found, show an error message
+                    if (!loggedIn)
+                    {
+                        MessageBox.Show("Incorrect username or PIN. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
         }
-        private bool ValidatePin()
+
+        private bool ValidateLoginInfo()
         {
             if (string.IsNullOrEmpty(PINTextBox.Password))
             {
@@ -104,6 +111,12 @@ namespace BackupSystemTool
             if (PINTextBox.Password.Length < 6 || PINTextBox.Password.Length > 12)
             {
                 MessageBox.Show("PIN must be between 6 and 12 characters long", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(usernameTextBox.Text))
+            {
+                MessageBox.Show("Username and Email cannot be empty.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return false;
             }
 
@@ -139,6 +152,21 @@ namespace BackupSystemTool
                     }
                 }
             }
+        }
+
+        private void registerPageLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            RegisterPage registerPage = new RegisterPage();
+            registerPage.Show();
+            this.Close();
+        }
+
+        private void resetPasswordLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            //navigate to reset password page
+            ResetPasswordPage resetPasswordPage = new ResetPasswordPage();
+            resetPasswordPage.Show();
+            this.Close();
         }
     }
 }

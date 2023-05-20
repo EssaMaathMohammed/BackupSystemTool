@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BackupSystemTool"
-             StartupUri="RegisterPage.xaml">
+             StartupUri="LoginPage.xaml">
     <Application.Resources>
         
         <!-- Lable Style Start -->
@@ -10,25 +10,78 @@
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="30"/>
             <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Foreground" Value="#708090"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,10,0,40"/>
         </Style>
         <!-- Lable Style End -->
 
+        <!-- ListView Style Start -->
+        <Style x:Key="connectionListViewBorder" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+                              Direction="315" 
+                              Opacity="0.25" 
+                              ShadowDepth="5" 
+                              BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="connectionListViewStyle" TargetType="ListView">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListView}">
+                        <!-- Define the Border element -->
+                        <Border Style="{StaticResource connectionListViewBorder}">
+                            <ScrollViewer>
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="customListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="Transparent"/>
+                                <!-- Change the color to your desired selection color -->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- ListView Style End -->
 
         <!-- button border Style Start -->
         <Style x:Key="basicButtonBorder" TargetType="Border">
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="CornerRadius" Value="25"/>
+            <Setter Property="Width" Value="225"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
-        
-         <Style x:Key="greenBackgroundButtonBorder" TargetType="Border" BasedOn="{StaticResource basicButtonBorder}">
-            <Setter Property="Background" Value="#44F09F"/>
+
+        <Style x:Key="orangeBackgroundButtonBorder" TargetType="Border" BasedOn="{StaticResource basicButtonBorder}">
+            <Setter Property="Background" Value="#7393B3"/>
         </Style>
         <!-- button border Style End -->
 
+        
+        
         <!-- button Style Start -->
         <Style TargetType="Button" x:Key="basicButton">
             <Setter Property="Width" Value="500"/>
@@ -39,12 +92,13 @@
         </Style>
 
         <Style TargetType="Button" x:Key="greenBackgroundButton" BasedOn="{StaticResource basicButton}">
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <!-- Define the Border element -->
-                        <Border Style="{StaticResource greenBackgroundButtonBorder}">
+                        <Border Style="{StaticResource orangeBackgroundButtonBorder}">
                             <!-- Add a ContentPresenter to the button -->
                             <!-- Horizontal Snaps Vertical controls where the text of the button will be showing -->
                             <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
@@ -59,15 +113,180 @@
         </Style>
         <!-- button Style End -->
 
+        <!-- Connection Page Button Start -->
+        <Style TargetType="Button" x:Key="connectionPageBaseButton">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
 
-        <!-- password box style start --> 
+        <Style x:Key="connectionPageButtonBorder" TargetType="Border">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="50"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#5B85AA" Offset="0.5" />
+                        <GradientStop Color="#4E668D" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+                              Direction="315" 
+                              Opacity="0.25" 
+                              ShadowDepth="5" 
+                              BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="connectionsPageButton" BasedOn="{StaticResource connectionPageBaseButton}">
+            <Setter Property="Margin" Value="0 0 25 20"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="25"/>
+
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Define the Border element -->
+                        <Border Style="{StaticResource connectionPageButtonBorder}" >
+                            <!-- Add a ContentPresenter to the button -->
+                            <!-- Horizontal Snaps Vertical controls where the text of the button will be showing -->
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}"
+                                              Margin="0 0 0 4.5"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Connection Page Button End -->
+
+        <!-- Connection Page Nav Buttons Start -->
+        <Style x:Key="connectionPageNavButtonBorder" TargetType="Border">
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+                              Direction="315" 
+                              Opacity="0.25" 
+                              ShadowDepth="5" 
+                              BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="connectionPageBaseNavButton">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style TargetType="Button" x:Key="connectionsPageNavButton" BasedOn="{StaticResource connectionPageBaseButton}">
+            <Setter Property="Margin" Value="0 5 20 0"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Foreground" Value="#414770"/>
+            <Setter Property="FontSize" Value="16"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Define the Border element -->
+                        <Border Style="{StaticResource connectionPageNavButtonBorder}" >
+                            <!-- Add a ContentPresenter to the button -->
+                            <!-- Horizontal Snaps Vertical controls where the text of the button will be showing -->
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Connection Page Nav Buttons End -->
+
+        <!-- general button styles Start -->
+        <Style x:Key="borderlessButtonBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style x:Key="roundBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#5B85AA"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#5B85AA" Offset="0.5" />
+                        <GradientStop Color="#4E668D" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="borderlessButtonBasicStyle">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <!-- general button styles End -->
+        
+        <!-- Borderless Button style Start -->
+        <Style TargetType="Button" x:Key="borderlessButton" BasedOn="{StaticResource borderlessButtonBasicStyle}">
+
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Define the Border element -->
+                        <Border Style="{StaticResource borderlessButtonBorderStyle}" >
+                            <!-- Add a ContentPresenter to the button -->
+                            <!-- Horizontal Snaps Vertical controls where the text of the button will be showing -->
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="Center"
+                                              Margin="0 0 0 10"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Borderless Button style End -->
+
+        <!-- password box style start -->
         <ControlTemplate x:Key="boxControlTemplate">
-            <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black">
+            <Border CornerRadius="10" BorderThickness="1" BorderBrush="Gray" Background="#d1d1e0">
                 <ScrollViewer x:Name="PART_ContentHost" />
             </Border>
         </ControlTemplate>
-      
         <Style x:Key="passwordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="225.82"/>
+            <Setter Property="Height" Value="35.88"/>
+            <Setter Property="ItemsControl.Template" Value="{StaticResource boxControlTemplate}"/>
+        </Style>
+        <Style x:Key="textBoxStyle" TargetType="TextBox">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="5"/>
@@ -85,15 +304,43 @@
             <Setter Property="Margin" Value="10 0 0 10"/>
             <Setter Property="Padding" Value="5 0 5 0"/>
         </Style>
+
+        <Style TargetType="Button" x:Key="buttonGroupStyle" BasedOn="{StaticResource buttonGroup}">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Foreground" Value="White"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Define the Border element -->
+                        <Border Style="{StaticResource roundBorderStyle}">
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="Center"
+                                              Margin="0 0 0 10"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <!-- button group style end -->
 
         <!-- connection textbox style start -->
+        <ControlTemplate x:Key="connectionTextboxControlTemplate">
+            <Border CornerRadius="10" BorderThickness="1" BorderBrush="Gray" Background="White">
+                <ScrollViewer x:Name="PART_ContentHost" />
+            </Border>
+        </ControlTemplate>
         <Style TargetType="TextBox" x:Key="connectionTextBox">
             <Setter Property="Width" Value="200"/>
             <Setter Property="Height" Value="21"/>
             <Setter Property="HorizontalAlignment" Value="left"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="Margin" Value="5"/>
+            <Setter Property="ItemsControl.Template" Value="{StaticResource connectionTextboxControlTemplate}"/>
         </Style>
         <!-- connection textbox style end -->
         
@@ -107,5 +354,132 @@
         </Style>
         <!-- connection PasswordBox style end -->
 
+        <!-- Job Page Style Section Start -->
+
+        <!-- Job ListView Item Style Start -->
+        <Style x:Key="jobListItemBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#5B85AA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+        <!-- Job ListView Item Style End -->
+
+        <!-- Add Job Button Start -->
+        <Style TargetType="Button" x:Key="addJobButtonStyle" BasedOn="{StaticResource connectionPageBaseButton}">
+            <Setter Property="Margin" Value="0 5 20 5"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Foreground" Value="#414770"/>
+            <Setter Property="FontSize" Value="16"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Define the Border element -->
+                        <Border Style="{StaticResource connectionPageNavButtonBorder}" Width="200" Height="40">
+                            <!-- Add a ContentPresenter to the button -->
+                            <!-- Horizontal Snaps Vertical controls where the text of the button will be showing -->
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Add Job Button End -->
+
+        
+        <!-- Job Page Basic Button Start -->
+        <Style TargetType="Button" x:Key="basicJobPageButton" BasedOn="{StaticResource connectionPageBaseButton}">
+            <Setter Property="Margin" Value="0 5 20 5"/>
+            <Setter Property="Foreground" Value="#414770"/>
+            <Setter Property="FontSize" Value="11"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Define the Border element -->
+                        <Border Style="{StaticResource connectionPageNavButtonBorder}" Width="120" Height="26" CornerRadius="5">
+                            <!-- Add a ContentPresenter to the button -->
+                            <!-- Horizontal Snaps Vertical controls where the text of the button will be showing -->
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Job Page Basic Button End -->
+
+        <!-- Job Page Label Style Start -->
+        <Style TargetType="Label" x:Key="jobPageLabelStyle">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="20,0,10,0"/>
+        </Style>
+        <!-- Job Page Label Style End -->
+
+        <!-- Job Page Style Section End -->
+
+        <!-- Navigation Button Style Start -->
+        <Style TargetType="Button" x:Key="navigationButtonStyle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Define the Border element -->
+                        <Border>
+                            <!-- Add a ContentPresenter to the button -->
+                            <!-- Horizontal Snaps Vertical controls where the text of the button will be showing -->
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                              Content="{TemplateBinding Content}"
+                                              Margin="0 0 0 4.5"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Navigation Button Style End -->
+
+        <!-- Decryption Page style Start -->
+        <Style x:Key="stackRoundBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Gray" ShadowDepth="9" Opacity="0.5" BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+
+        <Style x:Key="buttonRoundBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <!-- Decryption Page style End -->
+        
     </Application.Resources>
 </Application>

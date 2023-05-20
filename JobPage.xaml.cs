@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Reflection;
 using System.IO;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace BackupSystemTool
 {
@@ -19,8 +21,10 @@ namespace BackupSystemTool
 
         private JobItem selectedItem;
         private Button selectedButton;
-        private System.Windows.Forms.NotifyIcon _notifyIcon;
         private ConnectionItem selectedConnectionItem;
+        private Border lastSelectedBorder;
+        private bool navigateClose = false;
+        private ClosingDialog.UserChoice closingResult = ClosingDialog.UserChoice.Cancel;
         public JobPage()
         {
             InitializeComponent();
@@ -29,16 +33,16 @@ namespace BackupSystemTool
             // Get the icon file path
             string basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string relativeIconPath = @"..\..\..\resources\icons\icon-testing-note-book-report-testing-177786230.ico";
-            string absoluteIconPath = Path.GetFullPath(Path.Combine(basePath, relativeIconPath));
+            App.absoluteIconPath = Path.GetFullPath(Path.Combine(basePath, relativeIconPath));
 
             // Initialize the notification icon
-            _notifyIcon = new System.Windows.Forms.NotifyIcon
+            App._notifyIcon = new System.Windows.Forms.NotifyIcon
             {
-                Icon = new System.Drawing.Icon(absoluteIconPath),
+                Icon = new System.Drawing.Icon(App.absoluteIconPath),
                 Visible = false,
             };
             // Add event handler for restoring the app on double-click
-            _notifyIcon.MouseDoubleClick += (s, e) => ShowAndActivate();
+            App._notifyIcon.MouseDoubleClick += (s, e) => ShowAndActivate();
         }
 
         private List<JobItem> GetJobList()
@@ -149,8 +153,16 @@ namespace BackupSystemTool
 
             if (selectedItem != null)
             {
-                BrowseDatabasesDialog browseDatabasesDialog = new BrowseDatabasesDialog(this ,selectedItem, selectedConnectionItem);
-                browseDatabasesDialog.ShowDialog();
+                // check if the server is reachable
+                MysqlConnector connector = new MysqlConnector();
+                if (connector.GetDatabases(selectedConnectionItem.ServerName, selectedConnectionItem.Username, selectedConnectionItem.Password) != null)
+                {
+                    BrowseDatabasesDialog browseDatabasesDialog = new BrowseDatabasesDialog(this, selectedItem, selectedConnectionItem);
+                    browseDatabasesDialog.ShowDialog();
+                }
+                else {
+                    MessageBox.Show("Server is not reachable", "Connection Error", MessageBoxButton.OK);
+                }
             }
             else {
                 MessageBox.Show("Please Select A Job Before browsing databases");
@@ -295,6 +307,17 @@ namespace BackupSystemTool
                         local_path = dialog.SelectedPath
                     };
 
+                    // delete the old location if it exists
+                    using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+                    {
+                        conn.CreateTable<LocalLocation>();
+                        List<LocalLocation> itemsList = conn.Table<LocalLocation>().Where(c => c.job_id == selectedItem.id).ToList();
+                        if (itemsList.Count > 0)
+                        {
+                            conn.Delete(itemsList[0]);
+                        }
+                    }
+
                     // insert the item into the LocalLocation Table
                     using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
                     {
@@ -308,7 +331,6 @@ namespace BackupSystemTool
                 }
             }
         }
-
         private void cloudLocationMenuOption_Click(object sender, RoutedEventArgs e)
         {
             S3LocationDialog locationsDialog = new S3LocationDialog(this, selectedItem);
@@ -334,7 +356,7 @@ namespace BackupSystemTool
                         foreach (JobDatabases database in GetJobRelatedDatabases()) {
 
                             // create a backup of that database in the local location
-                            backupManager.BackupToLocalLocation(database.database_name);
+                            Task.Run(() => backupManager.GenerateEncryptedBackup(database.database_name));
                         }
                     }
                     else if (selectedItem.location_type == App.Locations.S3Location.ToString())
@@ -343,7 +365,7 @@ namespace BackupSystemTool
                         foreach (JobDatabases database in GetJobRelatedDatabases())
                         {
                             // create a backup of that database in the local location
-                            backupManager.BackupToS3Bucket(database.database_name);
+                            Task.Run(() => backupManager.GenerateEncryptedBackup(database.database_name));
                         }
                     }
                     else if (selectedItem.location_type == null)
@@ -388,37 +410,43 @@ namespace BackupSystemTool
                 MessageBox.Show("Please Select an item first to start backup.");
             }
         }
-
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            // Show the custom closing dialog
-            var closeDialog = new ClosingDialog();
-            closeDialog.ShowDialog();
-
-            // Get the user's choice from the dialog
-            ClosingDialog.UserChoice result = closeDialog.Choice;
-
-            // Perform action based on the user's choice
-            switch (result)
+            if (!navigateClose)
             {
-                case ClosingDialog.UserChoice.Close:
-                    _notifyIcon.Dispose(); // Dispose of the notification icon resources
-                    break;
-                case ClosingDialog.UserChoice.RunInBackground:
-                    Hide(); // Hide the main window
-                    _notifyIcon.Visible = true; // Show the notification icon
-                    e.Cancel = true; // Cancel the closing event
-                    break;
-                case ClosingDialog.UserChoice.Cancel:
-                    e.Cancel = true; // Cancel the closing event
-                    break;
+                if (closingResult == ClosingDialog.UserChoice.Cancel)
+                {
+                    // Show the custom closing dialog
+                    var closeDialog = new ClosingDialog();
+                    closeDialog.ShowDialog();
+
+                    // Get the user's choice from the dialog
+                    closingResult = closeDialog.Choice;
+
+                    // Perform action based on the user's choice
+                    switch (closingResult)
+                    {
+                        case ClosingDialog.UserChoice.Close:
+                            App._notifyIcon.Dispose(); // Dispose of the notification icon resources
+                            break;
+                        case ClosingDialog.UserChoice.RunInBackground:
+                            Hide(); // Hide the main window
+                            App._notifyIcon.Visible = true; // Show the notification icon
+                            e.Cancel = true; // Cancel the closing event
+                            break;
+                        case ClosingDialog.UserChoice.Cancel:
+                            e.Cancel = true; // Cancel the closing event
+                            break;
+                    }
+                }
+                else {
+                    App._notifyIcon.Dispose();
+                }
             }
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            _notifyIcon.Dispose(); // Dispose of the notification icon resources when the window is closed
         }
 
         private void ShowAndActivate()
@@ -426,7 +454,7 @@ namespace BackupSystemTool
             Show(); // Show the main window
             WindowState = WindowState.Normal; // Set the window state to normal
             Activate(); // Activate the window to bring it to the top and give it focus
-            _notifyIcon.Visible = false; // Hide the notification icon
+            App._notifyIcon.Visible = false; // Hide the notification icon
         }
 
         private List<JobDatabases> GetJobRelatedDatabases()
@@ -440,6 +468,67 @@ namespace BackupSystemTool
                 return jobSchedules;
             }
             
+        }
+
+        private void navigationButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (navigationListView.Visibility == Visibility.Visible)
+            {
+                buttonBorder.BorderBrush = new SolidColorBrush(Colors.White);
+                navigationListView.Visibility = Visibility.Collapsed;
+                navigationButton.Foreground = new SolidColorBrush(Colors.White);
+            }
+            else
+            {
+                buttonBorder.BorderBrush = new SolidColorBrush(Colors.Transparent);
+                navigationListView.Visibility = Visibility.Visible;
+                navigationButton.Foreground = new SolidColorBrush(Color.FromRgb(65, 71, 112));
+            }
+        }
+
+        private void listViewItem_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (lastSelectedBorder != null)
+            {
+                lastSelectedBorder.BorderThickness = new Thickness(1);
+            }
+            lastSelectedBorder = sender as Border;
+            lastSelectedBorder.BorderThickness = new Thickness(3);
+        }
+        private void decryptionPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            navigateClose = true;
+            DecryptionPage decryptionPage = new DecryptionPage();
+            decryptionPage.Show();
+            this.Close();
+        }
+        private void connectionPageNavigationButton_Click(object sender, RoutedEventArgs e)
+        {
+            navigateClose = true;
+            ConnectionsPage connectionPage = new ConnectionsPage();
+            connectionPage.Show();
+            this.Close();
+        }
+
+        private void logoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<JobItem> jobs = null;
+            // select all jobs realted to user
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<JobItem>();
+                jobs = conn.Table<JobItem>().Where(j => j.userId == App.UserId).ToList();
+            }
+
+            BackupScheduleManager backupScheduleManager = new BackupScheduleManager();
+            if (jobs != null)
+            {
+                backupScheduleManager.clearAllTimers(jobs);
+            }
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            closingResult = ClosingDialog.UserChoice.Close;
+            this.Close();
         }
     }
 }

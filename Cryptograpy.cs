@@ -5,61 +5,64 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BackupSystemTool
 {
     public class Cryptograpy
     {
-        // return a ciphertext of the inputted plaintext using AES 265.
-        public string encryptStringAES(string plainText, string key)
+        public string EncryptStringAES(string plainText, string key, byte[] iv)
         {
             byte[] encrypted;
+
             using (Aes aes = Aes.Create())
             {
                 aes.Key = Encoding.UTF8.GetBytes(key);
-                // Initialization vector, setted to random 16 bytes
-                aes.IV = new byte[16];
-                encrypted = encryptStringToBytesAes(plainText, aes.Key, aes.IV);
+                aes.IV = iv;
+
+                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter sw = new StreamWriter(cs))
+                        {
+                            sw.Write(plainText);
+                        }
+                        encrypted = ms.ToArray();
+                    }
+                }
             }
+
             return Convert.ToBase64String(encrypted);
         }
 
-        // return an encrypted array of bytes using a combination of memory stream, crypto stream and stream writer.
-        private static byte[] encryptStringToBytesAes(string plainText, byte[] key, byte[] iv)
+        public string DecryptStringAES(string cipherText, string key, byte[] iv)
         {
-            if (plainText == null || plainText.Length <= 0)
-                throw new ArgumentNullException("plainText");
-            if (key == null || key.Length <= 0)
-                throw new ArgumentNullException("key");
-            if (iv == null || iv.Length <= 0)
-                throw new ArgumentNullException("iv");
+            string decrypted = "";
 
-            byte[] encrypted;
             using (Aes aes = Aes.Create())
             {
-                aes.Key = key;
+                aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
 
-                // Initializing a new MemoryStream object with the plaintext as a byte array
-                using (MemoryStream memoryStream = new MemoryStream())
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(cipherText)))
                 {
-                    // Creating a new CryptoStream object with the memory stream and the encryption algorithm
-                    using (CryptoStream cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                    using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
                     {
-                        // Writing the plaintext to the crypto stream using a StreamWriter object
-                        using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
+                        using (StreamReader sr = new StreamReader(cs))
                         {
-                            streamWriter.Write(plainText);
+                            decrypted = sr.ReadToEnd();
                         }
-                        // Getting the encrypted data from the memory stream as a byte array
-                        encrypted = memoryStream.ToArray();
                     }
                 }
-
             }
-            // return the encrypted array of bytes
-            return encrypted;
+            return decrypted;
         }
+
 
         // returns the hashed result of the inputted text.
         public string hashText(string text)
@@ -84,5 +87,17 @@ namespace BackupSystemTool
             }
             return Convert.ToBase64String(salt);
         }
+
+        public byte[] GenerateSecureIV()
+        {
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+            {
+                byte[] iv = new byte[16]; // 16 bytes for a 128-bit IV
+                rng.GetBytes(iv);
+                return iv;
+            }
+        }
+
+
     }
 }

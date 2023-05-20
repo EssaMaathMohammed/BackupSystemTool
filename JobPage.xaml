@@ -7,8 +7,17 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Closed="Window_Closed"
-        Title="JobPage" Height="450" Width="950" WindowStartupLocation="CenterScreen">
+        Title="JobPage"  Height="500" Width="900" WindowStartupLocation="CenterScreen">
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="1,1" EndPoint="0,0">
+                <GradientStop Color="#5B85AA" Offset="0.4" />
+                <GradientStop Color="#4E668D" Offset="0.7" />
+                <GradientStop Color="#414770" Offset="0.85" />
+                <GradientStop Color="#372248" Offset="1.1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -16,127 +25,197 @@
 
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="8*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition MinHeight="400"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
             </Grid.RowDefinitions>
+            
             <ListView x:Name="jobItemsListView"
                   HorizontalAlignment="Left"
-                  Grid.Row="0" Margin="0,0,0,48" Grid.RowSpan="2" Width="228"
-                  SelectionChanged="jobItemsListView_SelectionChanged">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
+                  Grid.Row="0" Width="210" Margin="5"
+                  SelectionChanged="jobItemsListView_SelectionChanged"
+                  Style="{StaticResource connectionListViewStyle}"
+                  ItemContainerStyle="{StaticResource customListViewItemStyle}">
+
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="4">
-                            <Grid.RowDefinitions>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="3*"></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding job_name}" Margin="1"
+                        <Border Style="{StaticResource jobListItemBorderStyle}" PreviewMouseLeftButtonDown="listViewItem_MouseLeftButtonDown" Margin="0,5,0,0">
+                            <Grid Margin="8" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding job_name}" Margin="1"
                                        Grid.Row="0" Grid.Column="0"/>
-                            <TextBlock Text="{Binding connection_name}" Margin="1" Grid.Row="1" Grid.Column="0"/>
-                            <Button Content="⋮" FontSize="20" FontWeight="Bold" Grid.Row="1" Grid.Column="1" Width="15" Click="optionsButton_Click">
-                                <Button.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Delete" Click="deleteJobMenuItem_Click"/>
-                                    </ContextMenu>
-                                </Button.ContextMenu>
-                            </Button>
-                            <TextBlock Text="{Binding location_type}" Margin="1" Grid.Row="2" Grid.Column="0"/>
+                                <StackPanel Grid.Row="1" Grid.Column="0">
+                                    <TextBlock Text="{Binding connection_name}" Margin="1" />
+                                    <TextBlock  Text="{Binding location_type}" Margin="1" VerticalAlignment="Top"/>
+                                </StackPanel>
 
-                        </Grid>
+                                <Button Content="⋮" FontSize="20" FontWeight="Bold"
+                                    Grid.Row="1" Grid.Column="1" 
+                                    Width="15"
+                                    Click="optionsButton_Click">
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Delete" Click="deleteJobMenuItem_Click"/>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                            </Grid>
+                        </Border>
+
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Button Content="Add Job" Grid.Row="1" Click="AddJobButton_Click" Margin="0,0,10,0"/>
+            <Button Content="Add Job" Click="AddJobButton_Click"
+                    Style="{StaticResource addJobButtonStyle}" Margin="10 0 10 0" Grid.Row="1"/>
         </Grid>
 
-        <Grid x:Name="jobInformation_Grid" Grid.Row="0" Grid.Column="1" Margin="22,17,38,105" Visibility="Visible">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="3*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="1"
+              MinHeight="320" Height="350" 
+              Width="670" VerticalAlignment="Top" Margin="0,20,20,0">
+            <Grid x:Name="jobInformation_Grid" Visibility="Visible" Margin="0,0,0,-55" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"></RowDefinition>
+                    <RowDefinition Height="3*"></RowDefinition>
+                    <RowDefinition Height="4*"></RowDefinition>
+                    <RowDefinition Height="4*"></RowDefinition>
+                    <RowDefinition Height="4*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-            <Label Content="Job Name: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-            <TextBox x:Name="jobName_TextBox" 
+                <Label Content="Job Name: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Top"
+                        Style="{StaticResource jobPageLabelStyle}" />
+                <TextBox x:Name="jobName_TextBox" VerticalAlignment="Top"
                      Style="{StaticResource connectionTextBox}"
-                     Grid.Row="0" Grid.Column="1" Width="300"/>
+                     Grid.Row="0" Grid.Column="1" Width="280" Height="30"/>
 
-            <Label Content="Connection Info: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-            <TextBox x:Name="ConnectionName_TextBox" 
+                <Label Content="Connection Info: " Grid.Row="1" Grid.Column="0"
+                       VerticalAlignment="Top" Style="{StaticResource jobPageLabelStyle}"/>
+                <TextBox x:Name="ConnectionName_TextBox" VerticalAlignment="Top"
                      Style="{StaticResource connectionTextBox}"
-                     Grid.Row="1" Grid.Column="1" Margin="5,17,0,16" Width="300"/>
+                     Grid.Row="1" Grid.Column="1" Width="280" Height="30"/>
 
 
-            <Label Content="Select Databases: " Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                <TextBox x:Name="relatedDatabases_TextBox" 
+                <Label Content="Select Databases: " Grid.Row="2" Grid.Column="0"
+                       VerticalAlignment="Top" Style="{StaticResource jobPageLabelStyle}"/>
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+                    <TextBox x:Name="relatedDatabases_TextBox" 
                          Style="{StaticResource connectionTextBox}"
-                         Grid.Row="2" Grid.Column="1" Width="300"/>
+                         Grid.Row="2" Grid.Column="1" Width="280" Height="30"/>
 
-                <Button x:Name="BrowseDatabasesButton" 
+                    <Button x:Name="BrowseDatabasesButton" 
                         Content="Browse Databases" 
                         Click="BrowseDatabasesButton_Click"
-                        Width="100" Height="20"
-                        HorizontalAlignment="Left" Margin="5"/>
-            </StackPanel>
+                        Width="120" Height="26"
+                        HorizontalAlignment="Left" Margin="5,6,5,5"
+                        Style="{StaticResource basicJobPageButton}"/>
+                </StackPanel>
 
-            <Label Content="Location: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
-                <TextBox x:Name="Location_TextBox" 
+                <Label Content="Location: " Grid.Row="3" Grid.Column="0" 
+                       VerticalAlignment="Top"  Style="{StaticResource jobPageLabelStyle}"/>
+                <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical" Grid.ColumnSpan="2">
+                    <TextBox x:Name="Location_TextBox" 
                          Style="{StaticResource connectionTextBox}"
-                         Grid.Row="3" Grid.Column="1" Width="300"/>
-                <Button x:Name="backupLocationOptions"
-                        Content="Select Location" 
+                         Grid.Row="3" Grid.Column="1" Width="280" Height="30" VerticalAlignment="Top"/>
+                    <Button x:Name="backupLocationOptions"
+                        Content="Select Location 🔽" 
                         Click="backupLocationOptions_Click"
-                        Width="100" Height="20"
-                        HorizontalAlignment="Left" Margin="5">
-                    <Button.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Local Path" Click="localLocationMenuOption_Click"/>
-                            <MenuItem Header="LAN Path"/>
-                            <MenuItem Header="Cloud" Click="cloudLocationMenuOption_Click"/>
-                        </ContextMenu>
-                    </Button.ContextMenu>
-                </Button>
-            </StackPanel>
+                        Width="120" Height="26"
+                        HorizontalAlignment="Left" Margin="5,6,5,5"
+                            Style="{StaticResource basicJobPageButton}">
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Local/LAN Path" Click="localLocationMenuOption_Click"/>
+                                <MenuItem Header="Cloud" Click="cloudLocationMenuOption_Click"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                </StackPanel>
 
-            <Label Content="Schedule Options: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
-                <TextBox x:Name="ScheduleBackup_TextBox" 
+                <Label Content="Schedule Options: " Grid.Row="4" Grid.Column="0"
+                       VerticalAlignment="Top"  Style="{StaticResource jobPageLabelStyle}"/>
+                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Vertical" Grid.ColumnSpan="2">
+                    <TextBox x:Name="ScheduleBackup_TextBox" 
                      Style="{StaticResource connectionTextBox}"
-                     Grid.Row="4" Grid.Column="1" Width="300"/>
-                <StackPanel>
-                    <Button x:Name="backupNowButton"
+                     Grid.Row="4" Grid.Column="1" Width="280" Height="30" />
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <Button x:Name="backupNowButton"
                         Content="Backup Now" 
                         Click="backupNowButton_Click"
-                        Width="100" Height="20"
-                        HorizontalAlignment="Left" Margin="5"/>
+                        Width="120" Height="26"
+                        HorizontalAlignment="Left" Margin="5"
+                                Style="{StaticResource basicJobPageButton}"/>
 
-                    <Button x:Name="scheduleBackupButton"
+                        <Button x:Name="scheduleBackupButton"
                         Content="Schedule Backup" 
                         Click="scheduleBackupButton_Click"
-                        Width="100" Height="20"
-                        HorizontalAlignment="Left" Margin="5"/>
+                        Width="120" Height="26"
+                        HorizontalAlignment="Left" Margin="5"
+                                Style="{StaticResource basicJobPageButton}"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
 
+            </Grid>
         </Grid>
+
+        <ListView 
+                x:Name="navigationListView"
+                Width="170" Height="210"
+                Grid.Column="1" 
+                Margin="0,10,5,0" 
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right"
+                Visibility="Collapsed"
+                Style="{StaticResource connectionListViewStyle}"
+                ItemContainerStyle="{StaticResource customListViewItemStyle}">
+            <ListViewItem Height="38"/>
+            <ListViewItem>
+                <Button x:Name="connectionPageNavigationButton"
+                        Click="connectionPageNavigationButton_Click"
+                        Content="Connection Page" 
+                        Grid.Column="1" 
+                        Style="{StaticResource connectionsPageNavButton}"
+                        Margin="3,0,0,0"/>
+            </ListViewItem>
+            <ListViewItem>
+                <Button x:Name="decryptionPageButton" Content="Decryption Page"
+                        Click="decryptionPageButton_Click"
+                        Style="{StaticResource connectionsPageNavButton}"
+                        Grid.Column="1" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Top" Margin="3,0,0,0"/>
+            </ListViewItem>
+            <ListViewItem>
+                <Button x:Name="logoutButton" Content="Logout"
+                        Click="logoutButton_Click"
+                        Style="{StaticResource connectionsPageNavButton}"
+                        Grid.Column="1" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Top" Margin="3,0,0,0"/>
+            </ListViewItem>
+        </ListView>
+        <Border x:Name="buttonBorder"
+                Style="{StaticResource buttonRoundBorderStyle}"
+                Background="Transparent"
+                BorderBrush="White"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Top"
+                Margin="0,10,10,0"
+                Grid.Column="1">
+            <Button Content="☰"
+                    x:Name="navigationButton"
+                    Click="navigationButton_Click"
+                    Style="{StaticResource navigationButtonStyle}"/>
+        </Border>
     </Grid>
 </Window>

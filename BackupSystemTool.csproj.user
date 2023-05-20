@@ -28,6 +28,9 @@
     <Compile Update="Controls\JobDatabaseUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="DecryptionPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="EditConnectionDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -38,6 +41,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="RegisterPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ResetPasswordPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="S3LocationDialog.xaml.cs">
@@ -72,6 +78,9 @@
     <Page Update="Controls\JobDatabaseUserControl.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="DecryptionPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="EditConnectionDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -85,6 +94,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="RegisterPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ResetPasswordPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="S3LocationDialog.xaml">

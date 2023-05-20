@@ -11,96 +11,123 @@ using System.Threading.Tasks;
 using System.Windows;
 using SQLite;
 using Amazon;
+using Microsoft.VisualBasic.ApplicationServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace BackupSystemTool
 {
     // used for managing backup operations across the application
     public class BackupManager
     {
-        public JobItem SelectedItem { get; set; }
+        private JobItem SelectedItem { get; set; }
         public BackupManager(JobItem SelectedItem) {
             this.SelectedItem = SelectedItem;
         }
+
         // creates a backup using GetFullDatabaseBackup and saves it to the selected Local Location
-        public void BackupToLocalLocation(string databaseName)
+        private void BackupToLocalLocation(string backupFileName, string encryptedBackupData)
         {
+            string decryptedEmail = "";
+            string localBackupLocation = "";
+
+            using (SQLite.SQLiteConnection sqliteConnection = new SQLite.SQLiteConnection(App.databasePath))
+            {
+                // Create the table for UserItem if it does not exist
+                sqliteConnection.CreateTable<UserItem>();
+                // Fetch the specific user based on the provided username
+                UserItem user = sqliteConnection.Table<UserItem>().FirstOrDefault(u => u.id == App.UserId);
+
+                KeyGenerator keyGenerator = new KeyGenerator(App.UserId.ToString());
+
+                Cryptograpy cryptograpy = new Cryptograpy();
+                // decrypt the user email
+                decryptedEmail = cryptograpy.DecryptStringAES(user.email, keyGenerator.getUserKeyReg(), Convert.FromBase64String(keyGenerator.getUserIVReg()));
+            }
             try
             {
-                // get the backup file name and path
-                string strBackupFileName = GetRelatedLocation<string>();
+                // Get the local backup location
+                localBackupLocation = GetRelatedLocation<string>();
 
-                // create a unique name for the backup
-                string backupFileName = GenerateBackupFileName(databaseName);
+                // Combine the path and unique name of the file
+                string backupFullPath = Path.Combine(localBackupLocation, backupFileName);
 
-                // combine the path and unique name of the file
-                string backupFullPath = Path.Combine(strBackupFileName, backupFileName);
-
-                // create a new StreamWriter to write the backup file
+                // Create a new StreamWriter to write the backup file
                 StreamWriter strBackupFile = new StreamWriter(backupFullPath);
 
-                // the backup data
-                string stdout = GetFullDatabaseBackup(databaseName);
+                // Write the encrypted backup data into the local location
+                strBackupFile.WriteLine(encryptedBackupData);
 
-                // write the backup file into the local location
-                strBackupFile.WriteLine(stdout);
-
-                // close the file and the backup process
+                // Close the file and the backup process
                 strBackupFile.Close();
 
-                // show a message box to indicate the backup is done
-                MessageBox.Show("Backup done at file:" + strBackupFileName);
+                // send an email to the user showing successfull status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Done", "Backup done and saved to local location: " + localBackupLocation);
             }
             catch (Exception ex)
             {
-                // show an error message if the backup process fails
-                MessageBox.Show("Error during the backup: \n\n" + ex.Message);
+                // send an email to the user showing error status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Error", "Error during the backup to: " + localBackupLocation);
             }
         }
 
         // creates a backup using GetFullDatabaseBackup and saves it to the selected S3 Bucket
-        public void BackupToS3Bucket(string databaseName)
+        private void BackupToS3Bucket(string backupFileName, string encryptedBackupData)
         {
+            string decryptedEmail = "";
+            // check if the email exists in the database 
+            using (SQLite.SQLiteConnection sqliteConnection = new SQLite.SQLiteConnection(App.databasePath))
+            {
+                // Create the table for UserItem if it does not exist
+                sqliteConnection.CreateTable<UserItem>();
+                // Fetch the specific user based on the provided username
+                UserItem user = sqliteConnection.Table<UserItem>().FirstOrDefault(u => u.id == App.UserId);
+                
+                KeyGenerator keyGenerator = new KeyGenerator(App.UserId.ToString());
+
+                Cryptograpy cryptograpy = new Cryptograpy();
+                // decrypt the user email
+                decryptedEmail = cryptograpy.DecryptStringAES(user.email, keyGenerator.getUserKeyReg(), Convert.FromBase64String(keyGenerator.getUserIVReg()));
+            }
             try
             {
-                // get the backup file name and path
+                // Get the S3 backup location
                 S3Item s3Item = GetRelatedLocation<S3Item>();
 
-                // create a unique name for the backup
-                string backupFileName = SelectedItem.job_name + "_backup_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".sql";
-
-                // read the backup data from the standard output
-                string backupData = GetFullDatabaseBackup(databaseName);
-
-                // create a new Amazon S3 client
+                // Create a new Amazon S3 client
                 AmazonS3Client s3Client = new AmazonS3Client(s3Item.AccessKeyId, s3Item.SecretAccessKey, RegionEndpoint.EUCentral1);
 
-                // create a transfer utility to upload the backup file to the S3 bucket
+                // Create a transfer utility to upload the backup file to the S3 bucket
                 TransferUtility transferUtility = new TransferUtility(s3Client);
 
-                // create a transfer request to upload the backup data to the S3 bucket
+                // Create a transfer request to upload the encrypted backup data to the S3 bucket
                 TransferUtilityUploadRequest transferRequest = new TransferUtilityUploadRequest
                 {
                     BucketName = s3Item.BucketName,
                     Key = backupFileName,
-                    InputStream = new MemoryStream(Encoding.UTF8.GetBytes(backupData)),
-                    CannedACL = S3CannedACL.Private // set the access control to private
+                    InputStream = new MemoryStream(Encoding.UTF8.GetBytes(encryptedBackupData)),
+                    CannedACL = S3CannedACL.Private // Set the access control to private
                 };
 
-                // upload the backup data to the S3 bucket
+                // Upload the encrypted backup data to the S3 bucket
                 transferUtility.Upload(transferRequest);
 
-                // show a message box to indicate the backup is done
-                MessageBox.Show("Backup done and uploaded to S3 bucket:" + s3Item.BucketName);
+                // send an email to the user showing successfull status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Done", "Backup done and saved to S3 bucket: " + s3Item.BucketName);
             }
             catch (AmazonS3Exception s3Exception)
             {
-                // show an error message if the S3 upload fails
-                MessageBox.Show("Error uploading backup to S3: \n\n" + s3Exception.Message);
+                // send an email to the user showing error status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Error", "Error during the backup to S3 bucket: " + s3Exception.Message);
             }
             catch (Exception ex)
             {
-                // show an error message if the backup process fails
-                MessageBox.Show("Error during the backup: \n\n" + ex.Message);
+                // send an email to the user showing error status
+                EmailServices emailServices = new EmailServices();
+                emailServices.SendEmail(decryptedEmail, "Backup Error", "Error during the backup to S3 bucket: " + ex.Message);
             }
         }
 
@@ -133,7 +160,7 @@ namespace BackupSystemTool
 
             // if the password exists put a -p before otherwaise keep it as an empty string
             string password = !connectionInfo.Password.Equals("") ? "-p" + connectionInfo.Password : "";
-            Debug.Write($"-u {connectionInfo.Username} {password} -h {connectionInfo.ServerName} --databases {databaseName} --hex-blob");
+
             // set the needed arguments for the backup
             psInfo.Arguments = $"-u {connectionInfo.Username} {password} -h {connectionInfo.ServerName} --databases {databaseName} --hex-blob";
            
@@ -149,6 +176,66 @@ namespace BackupSystemTool
             backup_process.Close();
 
             return backupResult;
+        }
+
+        // The GenerateBackup method that creates a DEK, encrypts the backup, and saves the DEK and the backup name in the backupInfo table
+        public void GenerateEncryptedBackup(string databaseName)
+        {
+            // Generate a unique backup file name
+            string backupFileName = GenerateBackupFileName(databaseName);
+
+            // Get the full database backup
+            string backupData = GetFullDatabaseBackup(databaseName);
+
+            // Create a KeyGenerator for the user operations passing the user id,
+            // this constructor creates a random salt to be used in the operations
+            KeyGenerator keyGenerator = new KeyGenerator(App.UserId.ToString());
+
+            // Create a DEK
+            string dataEncryptionKey = keyGenerator.CreateDataEncryptionKey(backupFileName);
+
+            // gets the user KEK
+            string keyEncryptionKey = keyGenerator.GetUserKeyEncryptionKeyReg();
+
+            // Initialize a Cryptograpy object
+            Cryptograpy cryptograpy = new Cryptograpy();
+
+
+            // generate an IV to be used for encrypting the data
+            byte[] dataIV = cryptograpy.GenerateSecureIV();
+            // Encrypt the backup data using the DEK
+            string encryptedBackupData = cryptograpy.EncryptStringAES(backupData, dataEncryptionKey, dataIV);
+
+
+            // Generate a random IV for encrypting the DEK with the KEK
+            byte[] dekIv = cryptograpy.GenerateSecureIV();
+            // Encrypt the DEK using the KEK and the generated IV
+            string encryptedDEK = cryptograpy.EncryptStringAES(dataEncryptionKey, keyEncryptionKey, dekIv);
+
+
+            // Save the encrypted DEK, the IV used to encrypt the DEK, and the backup file name in the backupInfo table
+            using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
+            {
+                conn.CreateTable<BackupInfo>();
+                BackupInfo newBackupInfo = new BackupInfo
+                {
+                    BackupName = backupFileName,
+                    EncryptedDEK = encryptedDEK,
+                    dekIV = Convert.ToBase64String(dekIv),
+                    dataIV = Convert.ToBase64String(dataIV)
+                };
+                conn.Insert(newBackupInfo);
+            }
+
+            // Save the encrypted backup data either locally or in the S3 bucket
+            if (SelectedItem.location_type.Equals(App.Locations.LocalLocation.ToString()))
+            {
+                BackupToLocalLocation(backupFileName, encryptedBackupData);
+            }
+            else if (SelectedItem.location_type.Equals(App.Locations.S3Location.ToString()))
+            {
+                BackupToS3Bucket(backupFileName, encryptedBackupData);
+            }
         }
 
         // creates a unique name for the backup file
@@ -187,5 +274,6 @@ namespace BackupSystemTool
             }
             return null;
         }
+
     }
 }

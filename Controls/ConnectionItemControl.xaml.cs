@@ -41,7 +41,6 @@ namespace BackupSystemTool.Controls
         public ConnectionItemControl()
         {
             InitializeComponent();
-            this.Height = 30;
         }
 
         // Using a DependencyProperty as the backing store for ConnectionItem.
@@ -93,12 +92,12 @@ namespace BackupSystemTool.Controls
             if (!expansionStatus)
             {
                 moreInfoStackPanel.Visibility = Visibility.Visible;
-                this.Height = 150;
+                this.Height = 180;
                 expansionStatus = true;
             }
             else {
                 moreInfoStackPanel.Visibility = Visibility.Collapsed;
-                this.Height = 30;
+                this.Height = 40;
                 expansionStatus = false;
             }
         }

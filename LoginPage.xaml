@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BackupSystemTool"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="350" Width="300"
         WindowStartupLocation="CenterScreen">
     <Grid>
         
@@ -14,14 +14,31 @@
             <Label Content="Login" 
                    Style="{StaticResource loginBorderStlye}"/>
 
-            <PasswordBox adorners:Watermark.Text="Enter Your Pin Here"
+            <TextBox x:Name="usernameTextBox" adorners:Watermark.Text="                 Username" Style="{StaticResource textBoxStyle}"/>
+            <PasswordBox adorners:Watermark.Text="                 Password" 
                             x:Name="PINTextBox" 
-                            Style="{StaticResource passwordBoxStyle}"/>
+                            Style="{StaticResource passwordBoxStyle}"
+                            />
 
             <Button x:Name="loginButton" Content="Login" 
                         Click="loginButton_Click"
-                        Style="{StaticResource greenBackgroundButton}"/>
+                        Style="{StaticResource greenBackgroundButton}" Width="267"/>
 
+            <Label x:Name="resetPasswordLabel" HorizontalAlignment="Center" VerticalAlignment="Center" MouseLeftButtonUp="resetPasswordLabel_MouseLeftButtonUp">
+                <TextBlock Text="Reset Password" FontSize="11">
+                    <TextBlock.TextDecorations>
+                        <TextDecoration Location="Underline" PenThicknessUnit="Pixel"/>
+                    </TextBlock.TextDecorations>
+                </TextBlock>
+            </Label>
+            
+            <Label x:Name="registerPageLabel" HorizontalAlignment="Center" VerticalAlignment="Center" MouseLeftButtonUp="registerPageLabel_MouseLeftButtonUp">
+                <TextBlock Text="Register" FontSize="11">
+                    <TextBlock.TextDecorations>
+                        <TextDecoration Location="Underline" PenThicknessUnit="Pixel"/>
+                    </TextBlock.TextDecorations>
+                </TextBlock>
+            </Label>
         </StackPanel>
             
     </Grid>

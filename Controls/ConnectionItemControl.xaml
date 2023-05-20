@@ -5,36 +5,41 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BackupSystemTool.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="600">
-
-    <StackPanel Background="White">
-        <Grid Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" MinWidth="200"></ColumnDefinition>
-                <ColumnDefinition Width="3*" MinWidth="200"></ColumnDefinition>
-                <ColumnDefinition Width="*" MinWidth="50"></ColumnDefinition>
-                <ColumnDefinition Width="*" MinWidth="50"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Name="ConnectionNameTextBlock" Text="Connection Name" 
-                           Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
-            <TextBlock x:Name="StatusTextBlock" Text="Status: Up"
-                           Grid.Column="2" Grid.Row="0"/>
-            <Button x:Name="expandButton" Content="..."
+             d:DesignHeight="40" d:DesignWidth="600">
+    <Border BorderBrush="#5B85AA" BorderThickness="1" CornerRadius="12" Margin="0 5 0 0">
+        <StackPanel VerticalAlignment="Center">
+            <Grid Margin="10 0 10 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" MinWidth="200"></ColumnDefinition>
+                    <ColumnDefinition Width="3*" MinWidth="200"></ColumnDefinition>
+                    <ColumnDefinition Width="*" MinWidth="50"></ColumnDefinition>
+                    <ColumnDefinition Width="*" MinWidth="50"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="ConnectionNameTextBlock" Text="Connection Name" 
+                               Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" />
+                <TextBlock x:Name="StatusTextBlock" Text="Status: Up"
+                               Grid.Column="2" Grid.Row="0" VerticalAlignment="Center"/>
+                <Button x:Name="expandButton" Content="..."
                         Click="expandButton_Click" 
                         Width="20" 
-                        Height="20"
-                        Grid.Column="3" Grid.Row="0"/>
-        </Grid>
-        <StackPanel x:Name="moreInfoStackPanel" Visibility="Collapsed" Margin="5">
-            <TextBlock x:Name="connectionLocation_TextBlock" Text="Connection Server: " Margin="20 5 0 0"/>
-            <TextBlock x:Name="connectionString_TextBlock" Text="Connection String: " Margin="20 5 0 0"/>
-            <TextBlock x:Name="connectionPort_TextBlock" Text="Connection Port: " Margin="20 5 0 0"/>
-            <TextBlock x:Name="connectionUsername_TextBlock" Text="Connection Username: " Margin="20 5 0 0"/>
-            
-            <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
-                <Button Content="Edit" Click="editButton_Click" Style="{StaticResource buttonGroup}"/>
-                <Button Content="Delete" Click="deleteButton_Click" Style="{StaticResource buttonGroup}"/>
+                        Height="50"
+                        VerticalAlignment="Top"
+                        Grid.Column="3" Grid.Row="0"
+                        FontSize="19"
+                        Style="{StaticResource borderlessButton}"/>
+            </Grid>
+            <StackPanel x:Name="moreInfoStackPanel" Visibility="Collapsed">
+                <TextBlock x:Name="connectionLocation_TextBlock" Text="Connection Server: " Margin="20 5 0 0"/>
+                <TextBlock x:Name="connectionString_TextBlock" Text="Connection String: " Margin="20 5 0 0"/>
+                <TextBlock x:Name="connectionPort_TextBlock" Text="Connection Port: " Margin="20 5 0 0"/>
+                <TextBlock x:Name="connectionUsername_TextBlock" Text="Connection Username: " Margin="20 5 0 0"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="45" Margin="0 0 0 15">
+                    <Button Content="Edit" VerticalContentAlignment="Center" Click="editButton_Click" Style="{StaticResource buttonGroupStyle}" Height="30"/>
+                    <Button Content="Delete" VerticalContentAlignment="Center" Click="deleteButton_Click" Style="{StaticResource buttonGroupStyle}" Height="30"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
-    </StackPanel>
+    </Border>
+
 </UserControl>
